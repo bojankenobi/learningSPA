@@ -1,0 +1,427 @@
+# 6. JS Modul 4: Validacija, Podaci i API
+
+Dobrodošli u finalni modul veb razvoja! Do sada smo naučili kako da menjamo elemente na ekranu. Međutim, prave aplikacije moraju da komuniciraju sa korisnikom (kroz forme), da čuvaju podatke (da se ne bi obrisali kada osvežimo stranicu) i da povlače informacije sa interneta (sa servera).
+
+U ovom modulu spremamo vas za izradu završnog, maturskog projekta!
+
+---
+
+## Nedelja 13: Validacija formi
+
+Kada korisnik popunjava formu (npr. registracija), mi moramo da proverimo da li je uneo ispravne podatke *pre* nego što ih pošaljemo dalje. To se zove **validacija**.
+
+Ključna stvar kod formi je sprečavanje njenog podrazumevanog ponašanja. Kada kliknete "Submit" u HTML formi, brauzer automatski osvežava stranicu. Mi to ne želimo! Zato koristimo `e.preventDefault()`.
+
+```html
+<form id="moja-forma">
+    <input type="text" id="ime" placeholder="Unesite ime">
+    <button type="submit">Pošalji</button>
+</form>
+<p id="greska" style="color: red;"></p>
+```
+
+```javascript
+let forma = document.getElementById("moja-forma");
+let inputIme = document.getElementById("ime");
+let poljeGreska = document.getElementById("greska");
+
+// Slušamo događaj "submit" na formi, a ne "click" na dugmetu!
+forma.addEventListener("submit", function(e) {
+    // 1. ZAUSTAVLJAMO OSVEŽAVANJE STRANICE
+    e.preventDefault(); 
+
+    // 2. Čitamo šta je korisnik ukucao
+    let unetoIme = inputIme.value;
+
+    // 3. Validacija (Provera)
+    if (unetoIme === "") {
+        poljeGreska.textContent = "Ime ne sme biti prazno!";
+    } else if (unetoIme.length < 3) {
+        poljeGreska.textContent = "Ime mora imati bar 3 slova.";
+    } else {
+        poljeGreska.textContent = "";
+        console.log(`Uspešno ste uneli ime: ${unetoIme}`);
+    }
+});
+```
+
+### Vežba: Validacija forme uživo
+Pokušaj da pošalješ prazno polje i prati poruku u konzoli ispod editora!
+
+<CodePlayground 
+  mode="console"
+  defaultJs={`function proveriUnos(tekst) {
+    if (tekst === "") {
+        console.error("GREŠKA: Polje ne sme biti prazno!");
+    } else if (tekst.length < 5) {
+        console.log("UPOZORENJE: Unos je prekratak.");
+    } else {
+        console.log("USPEH: Podaci spremni za slanje: " + tekst);
+    }
+}
+
+// Simulacija unosa
+proveriUnos("");
+proveriUnos("Abc");
+proveriUnos("Marko Markovic");`}
+/>
+
+---
+
+## Nedelja 14: JSON i LocalStorage
+
+Kada promenimo nešto na stranici preko JS-a, sve se resetuje čim korisnik osveži stranicu (F5). Da bismo trajno sačuvali podatke *u brauzeru korisnika*, koristimo **LocalStorage**.
+
+LocalStorage može da čuva samo tekst (String). Zato koristimo **JSON** (JavaScript Object Notation) format da pretvorimo naše nizove i objekte u običan tekst kada ih čuvamo, i obrnuto kada ih čitamo.
+
+```javascript
+// 1. ČUVANJE PODATAKA
+let korisnik = { ime: "Petar", poeni: 150 };
+
+// Pretvaramo objekat u JSON tekst: '{"ime":"Petar","poeni":150}'
+let korisnikJSON = JSON.stringify(korisnik);
+
+// Čuvamo u LocalStorage pod ključem "mojKorisnik"
+localStorage.setItem("mojKorisnik", korisnikJSON);
+
+// ----------------------------------------------------
+
+// 2. ČITANJE PODATAKA (čak i nakon što se ugasi brauzer)
+let sacuvaniPodaciTekst = localStorage.getItem("mojKorisnik");
+
+if (sacuvaniPodaciTekst !== null) {
+    // Vraćamo JSON tekst nazad u pravi JavaScript objekat
+    let sacuvaniKorisnik = JSON.parse(sacuvaniPodaciTekst);
+    console.log(`Dobrodošao nazad, ${sacuvaniKorisnik.ime}!`);
+} else {
+    console.log("Nema sačuvanih podataka.");
+}
+```
+
+<Quiz pitanje="Koja komanda se koristi za pretvaranje JavaScript objekta u JSON tekst?" opcije="JSON.parse()|JSON.stringify()|localStorage.setItem()|toString()" tacanOdgovorIndex="1" />
+
+---
+
+## Nedelja 15: Asinhroni JavaScript (Fetch API)
+
+Ponekad naš program mora da sačeka nešto. Na primer, tražimo vremensku prognozu od servera, i to traje 2 sekunde. Ne smemo da "zamrznemo" ceo sajt dok čekamo. Za to služi **Asinhroni JavaScript**.
+
+
+
+Da bismo komunicirali sa spoljnim API-jima (serverima), koristimo ugrađenu metodu `fetch()`. Uz nju idu ključne reči `async` i `await` koje kažu kodu: *"Pokreni ovo, ali sačekaj (await) da stignu podaci pre nego što nastaviš na sledeću liniju."*
+
+```javascript
+// Funkcija mora imati reč 'async' da bismo koristili 'await' unutra
+async function preuzmiKorisnike() {
+    try {
+        console.log("Šaljem zahtev serveru...");
+
+        // 'await' pauzira OVOJ funkciji izvršavanje dok server ne odgovori
+        let odgovor = await fetch("[https://jsonplaceholder.typicode.com/users](https://jsonplaceholder.typicode.com/users)");
+        
+        // Pretvaramo odgovor servera u JS niz/objekat
+        let podaci = await odgovor.json(); 
+
+        console.log("Podaci su stigli!");
+        
+        // Ispisujemo ime prvog korisnika sa servera
+        console.log(`Prvi korisnik se zove: ${podaci[0].name}`);
+
+    } catch (greska) {
+        // Ako pukne internet ili server ne radi, hvatamo grešku ovde
+        console.log("Došlo je do greške:", greska);
+    }
+}
+
+// Pozivamo funkciju
+preuzmiKorisnike();
+console.log("Ova linija se ispisuje ODMAH, ne čeka server!");
+```
+
+---
+
+## Nedelja 16: Završni projekat
+
+Stigli ste do kraja! Posedujete sve veštine potrebne da izgradite modernu, interaktivnu veb aplikaciju. 
+
+**Ideje za vaš maturski/završni projekat:**
+1. **To-Do Aplikacija sa LocalStorage:** Aplikacija gde korisnik može da doda zadatke, obriše ih, precrta ih, i svi zadaci ostaju sačuvani i nakon gašenja brauzera.
+2. **Vremenska prognoza:** Aplikacija koja traži od korisnika da unese grad, a zatim preko `fetch` API-ja komunicira sa javnim meteo serverom i prikazuje temperaturu na ekranu.
+3. **Interaktivni CV Generator:** Forma koju korisnik popunjava, a JS u realnom vremenu na desnoj strani ekrana generiše lep HTML/CSS dokument za štampu.
+
+---
+
+# Zadaci za Vežbu (Modul 4)
+
+Ovo su pravi, inženjerski izazovi. Razmislite o logici pre nego što pogledate rešenje.
+
+### Zadatak 1: Validacija lozinke
+Imate input polje za lozinku i dugme. Napišite funkciju koja se okida na klik dugmeta, uzima vrednost iz polja, i proverava:
+1. Da li je lozinka duža od 8 karaktera?
+2. Da li sadrži reč "password" (ako sadrži, odbiti je).
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Validacija lozinke"
+  kod={`let inputLozinka = document.getElementById("lozinka-polje");
+let dugme = document.getElementById("proveri-btn");
+
+dugme.addEventListener("click", function() {
+    let unetaLozinka = inputLozinka.value;
+
+    // Proveravamo dužinu
+    if (unetaLozinka.length < 8) {
+        console.log("Lozinka mora imati barem 8 karaktera.");
+    } 
+    // Proveravamo da li sadrži zabranjenu reč (koristimo metodu includes)
+    else if (unetaLozinka.includes("password")) {
+        console.log("Lozinka ne sme sadržati reč 'password'.");
+    } 
+    else {
+        console.log("Lozinka je bezbedna!");
+    }
+});`}
+  analiza="Metoda stringa .includes() je izuzetno korisna za ovakve provere. U realnom sistemu, dodali bismo i Regex da proverimo da li korisnik ima veliko slovo i broj."
+/>
+
+### Zadatak 2: Čuvanje teme u LocalStorage
+Napravite logiku koja na klik dugmeta menja temu sajta (dark/light), ali je usput čuva u `localStorage` pod ključem `odabranaTema`. 
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Čuvanje u LocalStorage"
+  kod={`let dugmeTema = document.getElementById("tema-dugme");
+
+dugmeTema.addEventListener("click", function() {
+    // 1. Menjamo klasu na body elementu
+    document.body.classList.toggle("dark-mode");
+
+    // 2. Proveravamo da li je klasa sada prisutna
+    let daLiJeTamna = document.body.classList.contains("dark-mode");
+
+    // 3. Čuvamo taj podatak u LocalStorage (čuvamo običan tekst "da" ili "ne")
+    if (daLiJeTamna) {
+        localStorage.setItem("odabranaTema", "da");
+    } else {
+        localStorage.setItem("odabranaTema", "ne");
+    }
+});
+
+// Prijateljski savet: Kada se sajt tek učitava, treba pročitati 
+// ovaj 'item' iz localStorage i dodati klasu ako piše "da"!`}
+  analiza="Ovo je školski primer kako se prave profesionalni sajtovi. Nije dovoljno samo promeniti boju, sajt mora da 'zapamti' korisnikov izbor za sledeći put kada poseti stranicu."
+/>
+
+### Zadatak 3: Preuzimanje jednog korisnika (Fetch API)
+Napišite asinhronu funkciju koja koristi `fetch` da pogodi sledeći URL: `https://jsonplaceholder.typicode.com/users/1`. (Ovo je javni test server). Kada stignu podaci o tom jednom korisniku, ispišite u konzolu njegov `email`.
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Fetch API"
+  kod={`async function dobaviEmail() {
+    try {
+        let odgovor = await fetch("https://jsonplaceholder.typicode.com/users/1");
+        
+        // Pretvaramo odgovor u JS objekat
+        let korisnik = await odgovor.json();
+        
+        // jsonplaceholder API vraća objekat koji ima svojstvo 'email'
+        console.log(\`Korisnikov email je: \${korisnik.email}\`);
+
+    } catch (greska) {
+        console.error("Greška pri komunikaciji sa serverom:", greska);
+    }
+}
+
+dobaviEmail();`}
+  analiza="Uvek koristite 'try/catch' blokove kada radite sa fetch komandom. Internet konekcija može da pukne svakog trenutka, a bez 'catch' bloka, vaš ceo JavaScript program bi pao i zaustavio se."
+/>
+
+# Praktični JS Projekti i Izazovi
+
+U ovoj lekciji primenićemo sve naučeno kroz tri kompletna mini-projekta. Svaki zadatak sadrži detaljnu postavku, interaktivni editor za vežbu i **skriveno rešenje** koje možete otključati.
+
+---
+
+## Zadatak 1: Pametni Kalkulator Bakšiša 💰
+
+**Postavka zadatka 1:**
+Napravite aplikaciju koja na osnovu unetog iznosa računa i odabranog procenta računa bakšiš i ispisuje ukupnu sumu za plaćanje. 
+* Korisnik unosi iznos u `input` polje.
+* Korisnik bira procenat (10%, 15% ili 20%) iz `select` menija.
+* Klikom na dugme, JavaScript računa bakšiš i prikazuje rezultate na dve decimale.
+
+### Vežba 1: Radni prostor za Bakšiš
+
+<CodePlayground 
+  mode="web"
+  defaultHtml={`<div class="kalkulator">
+  <h3>Kalkulator Bakšiša 💰</h3>
+  <label>Iznos računa (RSD):</label>
+  <input type="number" id="racun" placeholder="npr. 2500">
+  
+  <label>Kvalitet usluge:</label>
+  <select id="procenat">
+    <option value="10">Ljubazna usluga (10%)</option>
+    <option value="15" selected>Odlična usluga (15%)</option>
+    <option value="20">Vrhunska usluga (20%)</option>
+  </select>
+
+  <button id="racunajBtn">Izračunaj</button>
+  
+  <div class="rezultat">
+    <p>Bakšiš: <span id="iznosBaksisa">0</span> RSD</p>
+    <p><strong>Ukupno: <span id="ukupno">0</span> RSD</strong></p>
+  </div>
+</div>`}
+  defaultCss={`.kalkulator { 
+  font-family: sans-serif;
+  max-width: 300px;
+  padding: 20px;
+  background: #ffffff;
+  border: 2px solid #795548;
+  border-radius: 12px;
+}
+input, select, button { 
+  width: 100%; 
+  margin-bottom: 15px; 
+  padding: 10px; 
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+button { background: #795548; color: white; cursor: pointer; }`}
+  defaultJs={`// Pokušaj ovde da napišeš logiku pre nego što pogledaš rešenje!`}
+/>
+
+<ZadatakZaVezbu 
+  naslov="Prikaži kompletno rešenje za Bakšiš"
+  kod={`const dugme = document.getElementById("racunajBtn");
+
+dugme.addEventListener("click", () => {
+    const racun = Number(document.getElementById("racun").value);
+    const procenat = Number(document.getElementById("procenat").value);
+
+    if (racun > 0) {
+        const baksis = (racun * procenat) / 100;
+        const suma = racun + baksis;
+
+        document.getElementById("iznosBaksisa").textContent = baksis.toFixed(2);
+        document.getElementById("ukupno").textContent = suma.toFixed(2);
+    }
+});`}
+  analiza="Koristimo .toFixed(2) jer u radu sa novcem uvek želimo precizan prikaz decimala. Number() je obavezan jer HTML inputi uvek vraćaju string."
+/>
+
+---
+
+## Zadatak 2: Interaktivni Dizajner Kartice 🎨
+
+**Postavka zadatka 2:**
+Napravite panel koji omogućava promenu izgleda elementa u realnom vremenu (Real-time preview).
+1. Promenite boju pozadine i teksta pomoću `color` pickera.
+2. Koristite `range` klizač za promenu zaobljenosti ivica (`border-radius`).
+3. Koristite `input` događaj umesto `click` da bi se promene videle trenutno dok korisnik pomera kontrole.
+
+### Vežba 2: Radni prostor za Dizajn
+
+<CodePlayground 
+  mode="web"
+  defaultHtml={`<div class="dizajn-panel">
+  <h3>Dizajner Kartice 🎨</h3>
+  <label>Boja pozadine:</label>
+  <input type="color" id="bgBoja" value="#ffffff">
+  
+  <label>Boja teksta:</label>
+  <input type="color" id="textBoja" value="#333333">
+
+  <label>Zaobljenost:</label>
+  <input type="range" id="radius" min="0" max="50" value="10">
+
+  <div id="testKartica" class="preview">
+    <h4>Pregled</h4>
+    <p>Promeni opcije iznad!</p>
+  </div>
+</div>`}
+  defaultCss={`.dizajn-panel { font-family: sans-serif; padding: 15px; background: #f9f9f9; }
+.preview { 
+  margin-top: 20px; padding: 30px; 
+  background: white; border: 1px solid #ccc; 
+  text-align: center;
+}`}
+  defaultJs={`// Poveži inpute sa stilovima kartice ovde`}
+/>
+
+<ZadatakZaVezbu 
+  naslov="Prikaži kompletno rešenje za Dizajner"
+  kod={`const bg = document.getElementById("bgBoja");
+const txt = document.getElementById("textBoja");
+const rad = document.getElementById("radius");
+const kartica = document.getElementById("testKartica");
+
+// Koristimo 'input' događaj za trenutni odziv
+bg.addEventListener("input", () => {
+    kartica.style.backgroundColor = bg.value;
+});
+
+txt.addEventListener("input", () => {
+    kartica.style.color = txt.value;
+});
+
+rad.addEventListener("input", () => {
+    // Ne zaboravite da dodate 'px' na kraju vrednosti!
+    kartica.style.borderRadius = rad.value + "px";
+});`}
+  analiza="Direktna manipulacija stilom preko .style objekta je najbrži način za dinamičke promene dizajna."
+/>
+
+---
+
+## Zadatak 3: Digitalni Termometar 🌡️
+
+**Postavka zadatka 3:**
+Napravite program koji klasifikuje temperaturu i vizuelno signalizira stanje pozadinom poruke.
+* Ispod 10 stepeni: Pozadina plava, tekst "Hladno".
+* Od 11 do 25 stepeni: Pozadina zelena, tekst "Idealno".
+* Preko 25 stepeni: Pozadina crvena, tekst "Vrelo".
+
+### Vežba 3: Radni prostor za Termometar
+
+<CodePlayground 
+  mode="web"
+  defaultHtml={`<div class="termometar">
+  <h3>Termometar 🌡️</h3>
+  <input type="number" id="tempInput" placeholder="°C">
+  <button id="proveriBtn">Proveri</button>
+  
+  <div id="statusBox" class="prikaz">
+    Status...
+  </div>
+</div>`}
+  defaultCss={`.termometar { font-family: sans-serif; text-align: center; }
+.prikaz { margin-top: 20px; padding: 20px; border-radius: 8px; font-weight: bold; background: #eee; }
+button { padding: 10px; background: #333; color: white; border: none; cursor: pointer; }`}
+  defaultJs={`// Napiši if/else logiku ovde`}
+/>
+
+<ZadatakZaVezbu 
+  naslov="Prikaži kompletno rešenje za Termometar"
+  kod={`const btn = document.getElementById("proveriBtn");
+const box = document.getElementById("statusBox");
+
+btn.addEventListener("click", () => {
+    const t = Number(document.getElementById("tempInput").value);
+    
+    if (t <= 10) {
+        box.textContent = "❄️ Jako je hladno!";
+        box.style.background = "#2196F3"; 
+        box.style.color = "white";
+    } else if (t > 10 && t <= 25) {
+        box.textContent = "🌤️ Temperatura je idealna.";
+        box.style.background = "#4CAF50";
+        box.style.color = "white";
+    } else {
+        box.textContent = "🔥 Pazi, vrelo je!";
+        box.style.background = "#F44336";
+        box.style.color = "white";
+    }
+});`}
+  analiza="Ovdje kombinujemo logiku uslova sa direktnom manipulacijom DOM elemenata."
+/>

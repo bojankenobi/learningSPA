@@ -1,0 +1,337 @@
+# 4. Praktični Primeri
+
+Teorija je važna, ali najbolje se uči kroz praksu. Hajde da sada primenimo sve što smo naučili na konkretnim primerima. 
+
+## Primer 1: Klasa `Automobil`
+
+Kreirajmo jednostavnu klasu `Automobil` sa atributima za marku i brzinu, i metodama za ubrzavanje i prikaz informacija. 
+
+**Java Kod:**
+```java
+public class Automobil {
+    public String marka;
+    public int brzina;
+
+    public Automobil(String marka) {
+        this.marka = marka;
+        this.brzina = 0;
+    }
+
+    public void ubrzaj(int kolicina) {
+        this.brzina += kolicina;
+    }
+
+    public String prikaziInfo() {
+        return "Automobil marke " + marka + " se kreće brzinom od " + brzina + " km/h.";
+    }
+}
+
+public class Glavna {
+    public static void main(String[] args) {
+        Automobil mojAuto = new Automobil("Audi");
+        
+        mojAuto.ubrzaj(50);
+        System.out.println(mojAuto.prikaziInfo());
+        
+        mojAuto.ubrzaj(30);
+        System.out.println(mojAuto.prikaziInfo());
+    }
+}
+```
+
+> **Izlaz:**
+> Automobil marke Audi se kreće brzinom od 50 km/h.
+> Automobil marke Audi se kreće brzinom od 80 km/h.
+
+---
+
+## Primer 2: Bankovni Račun (Enkapsulacija)
+
+Ovaj primer demonstrira enkapsulaciju. Stanje računa je privatno i može se menjati samo preko javnih metoda `uplati` i `podigni`, koje sadrže logiku za proveru.
+
+**Java Kod:**
+```java
+public class BankovniRacun {
+    private double stanje;
+
+    public BankovniRacun(double pocetnoStanje) {
+        this.stanje = pocetnoStanje;
+    }
+
+    public double getStanje() {
+        return this.stanje;
+    }
+
+    public void uplati(double iznos) {
+        if (iznos > 0) {
+            this.stanje += iznos;
+        }
+    }
+
+    public void podigni(double iznos) {
+        if (iznos > 0 && iznos <= this.stanje) {
+            this.stanje -= iznos;
+        } else {
+            System.out.println("Nemate dovoljno sredstava.");
+        }
+    }
+}
+
+public class Glavna {
+    public static void main(String[] args) {
+        BankovniRacun racun = new BankovniRacun(1000);
+        
+        racun.uplati(500);
+        racun.podigni(200);
+        racun.podigni(1500); // Ovo će prijaviti grešku
+        
+        System.out.println("Trenutno stanje: " + racun.getStanje());
+    }
+}
+```
+
+---
+
+## Primer 3: Interaktivni Kalkulator Oblika (Polimorfizam)
+
+Hajde da oživimo naš primer sa oblicima! Program koristi polimorfizam da izračuna tačnu površinu na osnovu prosleđenog oblika.
+
+**Java Kod (Logika u pozadini):**
+```java
+abstract class Oblik {
+    abstract double povrsina();
+}
+
+class Krug extends Oblik {
+    private double poluprecnik;
+    public Krug(double r) { this.poluprecnik = r; }
+    
+    @Override
+    double povrsina() {
+        return Math.PI * poluprecnik * poluprecnik;
+    }
+}
+
+class Kvadrat extends Oblik {
+    private double stranica;
+    public Kvadrat(double a) { this.stranica = a; }
+
+    @Override
+    double povrsina() {
+        return stranica * stranica;
+    }
+}
+```
+
+---
+
+# Zadaci za Vežbu: Nasleđivanje
+
+Testirajte svoje znanje kroz sledeće zadatke. Rešenja su sakrivena unutar interaktivne komponente. 
+
+### Zadatak 1: Hijerarhija elektronskih uređaja (Višeslojno nasleđivanje)
+1. Kreirati klasu `ElektronskiUredjaj` sa atributima `proizvodjac`, `model` i metodom `ukljuci()`.
+2. Kreirati klasu `Racunar` koja nasleđuje `ElektronskiUredjaj` i dodaje atribute za brzinu procesora i RAM, kao i metodu `pokreniAplikaciju()`.
+3. Kreirati klasu `Laptop` koja nasleđuje `Racunar` i dodaje atribut za trajanje baterije, kao i metodu `proveriStanjeBaterije()`.
+4. U glavnoj metodi, kreirati objekat klase `Laptop` i pozvati sve metode da se demonstrira nasleđivanje.
+
+<ZadatakZaVezbu 
+  naslov="Zadatak 1: Rešenje"
+  kod={`// Nadklasa
+class ElektronskiUredjaj {
+    String proizvodjac;
+    String model;
+
+    public ElektronskiUredjaj(String proizvodjac, String model) {
+        this.proizvodjac = proizvodjac;
+        this.model = model;
+    }
+
+    public void ukljuci() {
+        System.out.println("Uređaj " + this.proizvodjac + " " + this.model + " se uključuje.");
+    }
+}
+
+// Podklasa nivoa 1
+class Racunar extends ElektronskiUredjaj {
+    double brzinaProcesoraGHz;
+    int kolicinaRAMaGB;
+
+    public Racunar(String proizvodjac, String model, double brzinaProcesoraGHz, int kolicinaRAMaGB) {
+        super(proizvodjac, model);
+        this.brzinaProcesoraGHz = brzinaProcesoraGHz;
+        this.kolicinaRAMaGB = kolicinaRAMaGB;
+    }
+
+    public void pokreniAplikaciju(String imeAplikacije) {
+        System.out.println("Aplikacija '" + imeAplikacije + "' se pokreće.");
+    }
+}
+
+// Podklasa nivoa 2
+class Laptop extends Racunar {
+    double trajanjeBaterijeSati;
+
+    public Laptop(String proizvodjac, String model, double brzina, int ram, double baterija) {
+        super(proizvodjac, model, brzina, ram);
+        this.trajanjeBaterijeSati = baterija;
+    }
+
+    public void proveriStanjeBaterije() {
+        System.out.println("Baterija traje " + this.trajanjeBaterijeSati + " sati.");
+    }
+}`}
+  analiza="Struktura hijerarhije: Imamo troslojnu hijerarhiju (Laptop -> Racunar -> ElektronskiUredjaj). Kada se kreira Laptop, njegov konstruktor poziva super(...) da bi se pokrenuo konstruktor Racunara, koji zatim poziva konstruktor ElektronskiUredjaj-a."
+/>
+
+### Zadatak 2: Medijski sadržaji i redefinisanje metoda
+1. Kreirati baznu klasu `MedijskiSadrzaj` sa atributima za naziv i trajanje, i metodom `reprodukuj()`.
+2. Kreirati klasu `Film` koja nasleđuje `MedijskiSadrzaj`, dodaje atribut reziser i redefiniše (override) metodu `reprodukuj()` da ispiše specifičnu poruku za film.
+3. Kreirati klasu `MuzickaNumera` koja takođe nasleđuje `MedijskiSadrzaj`, dodaje atribut izvodjac i redefiniše metodu `reprodukuj()` sa porukom za pesmu.
+
+<ZadatakZaVezbu 
+  naslov="Zadatak 2: Rešenje"
+  kod={`class MedijskiSadrzaj {
+    String naziv;
+    int trajanjeMinuti;
+
+    public MedijskiSadrzaj(String naziv, int trajanjeMinuti) {
+        this.naziv = naziv;
+        this.trajanjeMinuti = trajanjeMinuti;
+    }
+
+    public void reprodukuj() {
+        System.out.println("Reprodukujem medijski sadržaj: " + this.naziv);
+    }
+}
+
+class Film extends MedijskiSadrzaj {
+    String reziser;
+
+    public Film(String naziv, int trajanjeMinuti, String reziser) {
+        super(naziv, trajanjeMinuti);
+        this.reziser = reziser;
+    }
+
+    @Override
+    public void reprodukuj() {
+        System.out.println("Prikazujem film: " + this.naziv + ", režisera " + this.reziser);
+    }
+}
+
+class MuzickaNumera extends MedijskiSadrzaj {
+    String izvodjac;
+
+    public MuzickaNumera(String naziv, int trajanjeMinuti, String izvodjac) {
+        super(naziv, trajanjeMinuti);
+        this.izvodjac = izvodjac;
+    }
+
+    @Override
+    public void reprodukuj() {
+        System.out.println("Slušate pesmu: " + this.naziv + ", izvođača " + this.izvodjac);
+    }
+}`}
+  analiza="Redefinisanje metoda (@Override): Obe podklase pružaju svoju, specifičnu implementaciju metode reprodukuj(). Ovo je ključni deo zadatka i osnova polimorfizma."
+/>
+
+### Zadatak 3: Bankovni računi sa specifičnim pravilima
+1. Kreirati klasu `BankovniRacun` sa `protected` atributima za broj računa i stanje, i metodom `podigniNovac(iznos)` koja proverava da li ima dovoljno sredstava.
+2. Kreirati klasu `TekuciRacun` koja nasleđuje `BankovniRacun`, dodaje atribut `dozvoljeniMinus` i redefiniše metodu `podigniNovac` tako da dozvoljava podizanje do iznosa (stanje + dozvoljeniMinus).
+3. Kreirati klasu `StedniRacun` koja nasleđuje `BankovniRacun`, dodaje atribut `kamatnaStopa` i novu metodu `obracunajKamatu()`. Ova klasa koristi originalnu metodu za podizanje novca.
+
+<ZadatakZaVezbu 
+  naslov="Zadatak 3: Rešenje"
+  kod={`class BankovniRacun {
+    protected String brojRacuna;
+    protected double stanje;
+
+    public BankovniRacun(String brojRacuna, double pocetnoStanje) {
+        this.brojRacuna = brojRacuna;
+        this.stanje = pocetnoStanje;
+    }
+
+    public boolean podigniNovac(double iznos) {
+        if (iznos > stanje) {
+            System.out.println("Greška: Nemate dovoljno sredstava.");
+            return false;
+        }
+        stanje -= iznos;
+        return true;
+    }
+}
+
+class TekuciRacun extends BankovniRacun {
+    private double dozvoljeniMinus;
+
+    public TekuciRacun(String brojRacuna, double pocetnoStanje, double dozvoljeniMinus) {
+        super(brojRacuna, pocetnoStanje);
+        this.dozvoljeniMinus = dozvoljeniMinus;
+    }
+
+    @Override
+    public boolean podigniNovac(double iznos) {
+        if (iznos > (stanje + dozvoljeniMinus)) {
+            System.out.println("Greška: Prekoračili ste dozvoljeni minus.");
+            return false;
+        }
+        stanje -= iznos;
+        return true;
+    }
+}
+
+class StedniRacun extends BankovniRacun {
+    private double kamatnaStopa;
+
+    public StedniRacun(String brojRacuna, double pocetnoStanje, double kamatnaStopa) {
+        super(brojRacuna, pocetnoStanje);
+        this.kamatnaStopa = kamatnaStopa;
+    }
+
+    public void obracunajKamatu() {
+        double kamata = stanje * kamatnaStopa;
+        stanje += kamata;
+    }
+}`}
+  analiza="TekuciRacun modifikuje postojeće ponašanje (podizanje novca). StedniRacun proširuje funkcionalnost dodavanjem nove metode obracunajKamatu(), dok koristi originalnu logiku za podizanje novca. Atribut stanje je protected, što znači da mu podklase mogu direktno pristupiti."
+/>
+
+### Zadatak 4: Proizvodi i obračun cene (Korišćenje `super.metoda()`)
+1. Kreirati klasu `Proizvod` sa atributima za naziv i osnovnu cenu, i metodom `obracunajCenu()` koja vraća osnovnu cenu.
+2. Kreirati klasu `PrehrambeniProizvod` koja nasleđuje `Proizvod`, dodaje atribut `stopaPDVa` i redefiniše metodu `obracunajCenu()`.
+3. **Ključni zahtev:** Unutar redefinisane metode, za dobijanje osnovne cene, morate pozvati originalnu metodu iz nadklase koristeći `super.obracunajCenu()`, a zatim na tu vrednost dodati PDV.
+
+<ZadatakZaVezbu 
+  naslov="Zadatak 4: Rešenje"
+  kod={`class Proizvod {
+    protected String naziv;
+    protected double osnovnaCena;
+
+    public Proizvod(String naziv, double osnovnaCena) {
+        this.naziv = naziv;
+        this.osnovnaCena = osnovnaCena;
+    }
+
+    public double obracunajCenu() {
+        return this.osnovnaCena;
+    }
+}
+
+class PrehrambeniProizvod extends Proizvod {
+    private double stopaPDVa;
+
+    public PrehrambeniProizvod(String naziv, double osnovnaCena, double stopaPDVa) {
+        super(naziv, osnovnaCena);
+        this.stopaPDVa = stopaPDVa;
+    }
+
+    @Override
+    public double obracunajCenu() {
+        // Pozivamo metodu iz nadklase da dobijemo osnovnu cenu
+        double cenaBezPDVa = super.obracunajCenu();
+        double iznosPDVa = cenaBezPDVa * this.stopaPDVa;
+        return cenaBezPDVa + iznosPDVa;
+    }
+}`}
+  analiza="Srž ovog zadatka je poziv super.obracunajCenu(). Time ne pišemo ponovo logiku za dobijanje osnovne cene, već kažemo Javi: 'Izvrši originalnu metodu iz mog roditelja i daj mi njen rezultat'. Nakon toga proširujemo logiku dodavanjem obračuna PDV-a."
+/>

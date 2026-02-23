@@ -1,0 +1,221 @@
+# 4. JS Modul 2: Organizacija podataka i koda
+
+U prethodnom modulu naučili smo osnovnu logiku (if/else, petlje). Međutim, kako naš program raste, ne možemo sve pisati liniju po liniju. Kod bi postao nepregledan. U ovom modulu učimo kako da grupišemo kod u **Funkcije** i kako da organizujemo složene podatke u **Nizove** i **Objekte**.
+
+---
+
+## Nedelja 5: Funkcije (Functions)
+
+Zamislimo da imamo formulu za računanje površine pravougaonika koju moramo da iskoristimo 50 puta na sajtu. Da ne bismo pisali istu formulu 50 puta, mi je "zapakujemo" u funkciju.
+
+Funkcija je kao mini-mašina:
+1. **Ulaz (Parametri):** Šta ubacujemo u mašinu (npr. širina i visina).
+2. **Obrada:** Šta mašina radi sa tim podacima.
+3. **Izlaz (Return):** Šta nam mašina vraća kao rezultat.
+
+Ovo prati najvažnije pravilo programiranja: **DRY (Don't Repeat Yourself - Ne ponavljaj se)**.
+
+```javascript
+// 1. Deklaracija funkcije
+function izracunajPovrsinu(sirina, visina) {
+    let povrsina = sirina * visina;
+    return povrsina; // Vraća rezultat onome ko je pozvao funkciju
+}
+
+// 2. Pozivanje (izvršavanje) funkcije
+let soba1 = izracunajPovrsinu(4, 5); // Ubacujemo 4 i 5, dobijamo 20
+let soba2 = izracunajPovrsinu(10, 3); // Ubacujemo 10 i 3, dobijamo 30
+
+console.log(`Površina prve sobe je ${soba1} kvadrata.`);
+console.log(`Površina druge sobe je ${soba2} kvadrata.`);
+```
+
+### Vežba: Kalkulator PDV-a
+Promeni stopu poreza ili osnovnu cenu da vidiš kako funkcija vraća novi rezultat.
+
+<CodePlayground 
+  mode="console"
+  defaultJs={`function izracunajCenuSaPdv(osnovica, stopaPoreza) {
+    let porez = (osnovica * stopaPoreza) / 100;
+    return osnovica + porez;
+}
+
+let hleb = izracunajCenuSaPdv(60, 10);
+let telefon = izracunajCenuSaPdv(50000, 20);
+
+console.log("Cena hleba sa 10% PDV-a: " + hleb + " RSD");
+console.log("Cena telefona sa 20% PDV-a: " + telefon + " RSD");`}
+/>
+
+---
+
+## Nedelja 6: Nizovi (Arrays)
+
+Do sada je jedna varijabla čuvala jednu vrednost (`let ime = "Ana"`). Ali šta ako imamo spisak od 100 imena? Tu koristimo **Nizove**.
+
+Niz (Array) je lista vrednosti smeštena u jednu promenljivu. Piše se unutar srednjih zagrada `[ ]`.
+**Važno:** U programiranju, brojanje (indeksiranje) uvek počinje od nule (0), a ne od jedan!
+
+```javascript
+// Kreiranje niza
+let spisakZaKupovinu = ["Mleko", "Hleb", "Jaja"];
+
+// Čitanje iz niza (Indeksi kreću od 0)
+console.log(spisakZaKupovinu[0]); // Ispisuje "Mleko"
+console.log(spisakZaKupovinu[1]); // Ispisuje "Hleb"
+
+// Dodavanje nove stavke na KRAJ niza (push)
+spisakZaKupovinu.push("Kafa");
+console.log(spisakZaKupovinu); // ["Mleko", "Hleb", "Jaja", "Kafa"]
+
+// Brisanje poslednje stavke (pop)
+spisakZaKupovinu.pop(); 
+
+// Provera koliko elemenata ima u nizu (length)
+console.log(`Na spisku ima ${spisakZaKupovinu.length} stvari.`);
+```
+
+<Quiz pitanje="Koji će element biti ispisan ako pozovemo boje[2] iz niza: let boje = ['Crvena', 'Plava', 'Zelena', 'Žuta']?" opcije="Crvena|Plava|Zelena|Žuta" tacanOdgovorIndex="2" />
+
+---
+
+## Nedelja 7: Objekti (Objects)
+
+Dok su nizovi dobri za proste liste, **Objekti** su savršeni za modelovanje stvarnog sveta. 
+Objekat grupiše osobine koje pripadaju jednom entitetu. Piše se unutar vitičastih zagrada `{ }` i sastoji se od parova **ključ: vrednost** (key-value).
+
+Objekti čak mogu imati i svoje funkcije, koje se tada zovu **metode**.
+
+```javascript
+// Kreiranje objekta
+let masina = {
+    model: "X-2000",
+    brzina: 1500,
+    status: "Ugašena",
+    
+    // Metoda (Funkcija unutar objekta)
+    pokreni: function() {
+        this.status = "Uključena"; // 'this' označava OVAJ objekat
+        console.log(`Mašina ${this.model} je sada ${this.status}.`);
+    }
+};
+
+// Pristupanje podacima preko tačke (.)
+console.log(`Model mašine je: ${masina.model}`);
+console.log(`Trenutna brzina: ${masina.brzina} RPM`);
+
+// Pozivanje metode
+masina.pokreni();
+```
+
+---
+
+## Nedelja 8: Iteracija kroz složene podatke
+
+
+
+Prava moć JavaScript-a leži u kombinovanju svega što smo do sada naučili: petlji, if/else logike, nizova i objekata.
+U realnim aplikacijama (poput Facebook-a ili baze zaposlenih), podaci nam najčešće stižu kao **Niz objekata**. Pomoću `for` petlje, možemo proći kroz svaki objekat na listi i uraditi nešto sa njim.
+
+```javascript
+// NIZ koji u sebi sadrži OBJEKTE
+let zaposleni = [
+    { ime: "Marko", pozicija: "Operater", naSmeni: true },
+    { ime: "Jelena", pozicija: "Inženjer", naSmeni: false },
+    { ime: "Ivan", pozicija: "Tehničar", naSmeni: true }
+];
+
+console.log("--- Radnici trenutno na smeni ---");
+
+// Idemo od 0 do kraja niza
+for (let i = 0; i < zaposleni.length; i++) {
+    // Ako je radnik trenutno na smeni (true)
+    if (zaposleni[i].naSmeni === true) {
+        console.log(`${zaposleni[i].ime} (${zaposleni[i].pozicija})`);
+    }
+}
+```
+### Vežba: Filtriranje zaposlenih
+Ovo je realan primer kako JS obrađuje podatke. Dodaj novog radnika u niz i vidi da li se ispisuje u konzoli!
+
+<CodePlayground 
+  mode="console"
+  defaultJs={`let radnici = [
+    { ime: "Dragan", status: "Slobodan" },
+    { ime: "Marija", status: "Zauzet" },
+    { ime: "Nikola", status: "Slobodan" }
+];
+
+console.log("Dostupni radnici za novu smenu:");
+
+for (let i = 0; i < radnici.length; i++) {
+    if (radnici[i].status === "Slobodan") {
+        console.log("- " + radnici[i].ime);
+    }
+}`}
+/>
+
+---
+
+# Zadaci za Vežbu (Modul 2)
+
+Proverite svoje razumevanje organizacije koda. Razmislite o rešenju, pa ga uporedite klikom ispod!
+
+### Zadatak 1: Funkcija za konverziju valuta
+Napišite funkciju `konvertujUDinare` koja prima jedan parametar (iznos u evrima). Funkcija treba da pomnoži taj iznos sa 117.2 (kurs) i **vrati** iznos u dinarima. U glavnom kodu pozovite funkciju za 50 evra i ispišite rezultat.
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Konverzija valuta"
+  kod={`// Deklaracija funkcije
+function konvertujUDinare(evri) {
+    let kurs = 117.2;
+    let dinari = evri * kurs;
+    return dinari;
+}
+
+// Pozivanje i ispis
+let mojaUstedjevina = konvertujUDinare(50);
+console.log(\`Imate \${mojaUstedjevina} RSD.\`);`}
+  analiza="Funkcija uzima 'evri' kao ulazni parametar, vrši operaciju i koristi reč 'return' da izbaci vrednost napolje. Ovo nam omogućava da funkciju kasnije iskoristimo za bilo koji drugi iznos."
+/>
+
+### Zadatak 2: Manipulacija spiskom (Nizovi)
+Napravite niz sa 3 imena gradova. Dodajte novi grad na kraj niza koristeći metodu. Zatim ispišite koliko gradova ukupno ima u nizu, i ispišite ime **prvog** grada.
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Gradovi"
+  kod={`let gradovi = ["Beograd", "Novi Sad", "Niš"];
+
+// Dodavanje novog grada
+gradovi.push("Kragujevac");
+
+// Dužina niza
+console.log(\`U nizu ima \${gradovi.length} grada/gradova.\`);
+
+// Prvi grad (Indeks 0)
+console.log(\`Prvi grad na listi je \${gradovi[0]}.\`);`}
+  analiza="Metoda push() je najbolji način za bezbedno dodavanje elementa na kraj niza. Iako u nizu imamo 4 grada, poslednji grad se nalazi na indeksu 3, jer brojanje u programiranju kreće od 0."
+/>
+
+### Zadatak 3: Pretraga korisnika (Niz Objekata + Petlja)
+Dati ste niz objekata `korisnici` gde svaki ima `ime` i `aktivan` (boolean). Koristeći `for` petlju i `if` iskaz, prođite kroz niz i ispišite samo imena onih korisnika koji **nisu** aktivni (`aktivan === false`).
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Neaktivni korisnici"
+  kod={`let korisnici = [
+    { ime: "Ana", aktivan: true },
+    { ime: "Petar", aktivan: false },
+    { ime: "Jovan", aktivan: true },
+    { ime: "Milica", aktivan: false }
+];
+
+console.log("Suspendovani/Neaktivni nalozi:");
+
+for (let i = 0; i < korisnici.length; i++) {
+    if (korisnici[i].aktivan === false) {
+        console.log(korisnici[i].ime);
+    }
+}`}
+  analiza="Kombinacija 'for' petlje i nizova objekata je najčešći šablon u veb razvoju. Kada bismo umesto 'console.log' ovde ubacili HTML kod, zapravo bismo dobili interfejs prave aplikacije za administraciju!"
+/>
+

@@ -1,0 +1,422 @@
+# 1. Enkapsulacija: Sigurnosna Kutija
+
+Enkapsulacija je princip "pakovanja" podataka (atributa) i metoda koje rade sa tim podacima u jednu celinu - objekat. Ali to nije sve! Ključni deo je sakrivanje informacija (information hiding).
+
+Zamislite bankomat. Vi možete da ubacite karticu, unesete PIN i podignete novac. Ne znate (i ne treba da znate) kako bankomat interno proverava stanje na računu ili broji novčanice. On vam nudi jednostavan interfejs, a sakriva unutrašnju složenost. To je enkapsulacija.
+
+## Kako to radi?
+* Atributi klase se deklarišu kao `private`. To znači da im se ne može direktno pristupiti van klase.
+* Kreiraju se javne metode, tzv. geteri i seteri (`public`), koje služe kao kontrolisani pristup privatnim atributima.
+
+## Zašto je ovo važno?
+* **Kontrola:** Seteri nam omogućavaju da dodamo logiku za proveru pre nego što promenimo vrednost atributa (npr. ocena ne može biti veća od 5).
+* **Sigurnost:** Sprečava se slučajna ili namerna izmena stanja objekta na nepredviđen način.
+* **Fleksibilnost:** Možemo promeniti unutrašnju implementaciju klase bez da utičemo na kod koji je koristi, sve dok javni interfejs (metode) ostaje isti.
+* **Održivost:** Kada je unutrašnje stanje objekta zaštićeno, lakše je pronaći i ispraviti greške, jer znamo da se stanje moglo promeniti samo kroz definisane setere.
+
+## Primer: Klasa `Ucenik` sa enkapsulacijom
+
+```java
+public class Ucenik {
+    // Atributi su sada private!
+    private String ime;
+    private int ocena;
+
+    // Javni seter za 'ime'
+    public void setIme(String novoIme) {
+        this.ime = novoIme;
+    }
+
+    // Javni geter za 'ime'
+    public String getIme() {
+        return this.ime;
+    }
+    
+    // Seter za 'ocena' sa logikom za proveru
+    public void setOcena(int novaOcena) {
+        if (novaOcena >= 1 && novaOcena <= 5) {
+            this.ocena = novaOcena;
+        } else {
+            System.out.println("Greška: Ocena mora biti između 1 i 5.");
+        }
+    }
+
+    // Geter za 'ocena'
+    public int getOcena() {
+        return this.ocena;
+    }
+}
+```
+
+Sada, umesto direktnog pristupa `ucenik1.ocena = 10;`, moramo koristiti metodu:
+
+```java
+Ucenik ucenik1 = new Ucenik();
+ucenik1.setIme("Marko");
+ucenik1.setOcena(5); // Ovo je u redu
+ucenik1.setOcena(7); // Ovo će ispisati grešku!
+
+System.out.println("Učenik: " + ucenik1.getIme() + ", Ocena: " + ucenik1.getOcena());
+```
+
+<Quiz pitanje="Koji se modifikator pristupa koristi da bi se postiglo sakrivanje podataka u enkapsulaciji?" opcije="public|private|protected|static" tacanOdgovorIndex="1" />
+
+---
+
+# 2. Nasleđivanje: Porodično Stablo
+
+Nasleđivanje (Inheritance) je mehanizam koji omogućava jednoj klasi da "pokupi" (nasledi) atribute i metode od druge klase. Ovo je jedan od najmoćnijih načina za ponovnu upotrebu koda u OOP-u.
+
+## Ključni termini
+* **Nadklasa (Superclass):** Klasa od koje se nasleđuje. Naziva se i roditeljska (parent) ili osnovna (base) klasa.
+* **Podklasa (Subclass):** Klasa koja nasleđuje. Naziva se i dečija (child) ili izvedena (derived) klasa.
+* Koristimo ključnu reč `extends` da bismo ostvarili nasleđivanje.
+
+## Primer iz života
+Imamo opšti koncept `Vozilo`. Svako vozilo ima brzinu i može da se kreće.
+* `Automobil` je specifična vrsta vozila. On nasleđuje sve od `Vozila` (ima brzinu, kreće se), ali dodaje i nešto svoje, npr. broj vrata.
+* `Bicikl` je takođe vrsta vozila. I on nasleđuje od `Vozila`, ali ima svoj specifičan atribut, npr. broj brzina.
+
+## "IS-A" Odnos (JESTE)
+Nasleđivanje modelira "IS-A" (jeste) odnos. Ovo je ključno za pravilno korišćenje. Pre nego što upotrebite nasleđivanje, postavite sebi pitanje: Da li je podklasa zaista vrsta nadklase?
+* ✔ `Pas` jeste `Životinja`. (Dobro)
+* ✔ `Automobil` jeste `Vozilo`. (Dobro)
+* ❌ `Automobil` nije `Točak`. (Loše - ovo bi bio "HAS-A" odnos)
+
+---
+
+## Primer u Javi
+
+Prvo, osnovna (roditeljska) klasa:
+
+```java
+public class Zivotinja {
+    String ime;
+    public void jedi() {
+        System.out.println("Ova životinja jede.");
+    }
+}
+```
+
+Sada, izvedena (dečija) klasa koja nasleđuje `Zivotinju`:
+
+```java
+// Pas JE Životinja
+public class Pas extends Zivotinja {
+    public void laj() {
+        System.out.println("Av av!");
+    }
+}
+
+// Macka JE Životinja
+public class Macka extends Zivotinja {
+    public void mjauci() {
+        System.out.println("Mjau!");
+    }
+}
+```
+
+Kako se koristi:
+
+```java
+Pas mojPas = new Pas();
+mojPas.ime = "Lesi"; // 'ime' je nasleđeno iz klase Zivotinja
+mojPas.jedi();       // 'jedi()' je nasleđeno iz klase Zivotinja
+mojPas.laj();        // 'laj()' je specifično za klasu Pas
+```
+
+---
+
+## Ključna reč `super`
+
+Ključna reč `super` se koristi unutar podklase da bi se pozvale metode ili konstruktori iz nadklase. Ovo je korisno kada želimo da proširimo, a ne da potpuno zamenimo, ponašanje nadklase.
+
+```java
+public class Osoba {
+    String ime;
+    public Osoba(String ime) {
+        this.ime = ime;
+        System.out.println("Kreirana je Osoba.");
+    }
+    public void predstaviSe() {
+        System.out.println("Ja sam osoba, zovem se " + ime);
+    }
+}
+
+public class Student extends Osoba {
+    String fakultet;
+    public Student(String ime, String fakultet) {
+        // 1. Pozivamo konstruktor nadklase (Osoba)
+        super(ime); 
+        this.fakultet = fakultet;
+        System.out.println("Kreiran je Student.");
+    }
+    
+    @Override
+    public void predstaviSe() {
+        // 2. Pozivamo metodu predstaviSe() iz nadklase
+        super.predstaviSe(); 
+        System.out.println("Studiram na " + fakultet);
+    }
+}
+
+// Upotreba:
+Student s = new Student("Milan", "ETF");
+s.predstaviSe();
+```
+
+---
+
+## Primer 1: Svet Geometrijskih Oblika (Princip Specijalizacije)
+
+Jedan od najintuitivnijih primera za razumevanje nasleđivanja potiče iz geometrije. Zamislimo hijerarhiju oblika. Možemo reći da Kvadrat jeste Pravougaonik, ali sa jednim dodatnim, specifičnim pravilom: sve stranice su mu jednake. Dalje, Pravougaonik jeste Oblik. Ova hijerarhija je savršen primer principa specijalizacije. Krećemo od veoma opšteg koncepta (Oblik) i postepeno ga činimo specifičnijim.
+
+```java
+// Nadklasa (roditelj)
+class Oblik {
+    String boja;
+    public Oblik(String boja) {
+        this.boja = boja;
+    }
+}
+
+// Podklasa (dete) koja nasleđuje klasu Oblik
+class Pravougaonik extends Oblik {
+    double sirina;
+    double visina;
+
+    public Pravougaonik(String boja, double sirina, double visina) {
+        // super() mora biti prva linija koda u konstruktoru podklase.
+        super(boja);
+        this.sirina = sirina;
+        this.visina = visina;
+    }
+
+    public double povrsina() {
+        return this.sirina * this.visina;
+    }
+}
+
+// Podklasa koja nasleđuje klasu Pravougaonik
+class Kvadrat extends Pravougaonik {
+    public Kvadrat(String boja, double stranica) {
+        super(boja, stranica, stranica);
+    }
+}
+
+// Glavna klasa za testiranje
+public class GeometrijaTest {
+    public static void main(String[] args) {
+        Pravougaonik p = new Pravougaonik("Plava", 10, 5);
+        System.out.println("Boja pravougaonika: " + p.boja);
+        System.out.println("Površina pravougaonika: " + p.povrsina());
+
+        Kvadrat k = new Kvadrat("Crvena", 7);
+        System.out.println("Boja kvadrata: " + k.boja);
+        // Kvadrat može da koristi metodu povrsina() iako nije definisana u klasi Kvadrat!
+        System.out.println("Površina kvadrata: " + k.povrsina());
+    }
+}
+```
+
+**Analiza Koda:**
+* **Ključna reč `extends`:** Govori Javi da podklasa nasleđuje metode i atribute.
+* **Poziv `super()`:** To je način na koji podklasa poziva konstruktor svog direktnog roditelja.
+* **Nasleđivanje metoda:** Iako klasa Kvadrat nema sopstvenu metodu povrsina(), objekat k je može pozvati. To je zato što je Kvadrat nasledio ovu metodu.
+
+---
+
+## Primer 2: Klasifikacija u Životinjskom Carstvu (Princip Proširenja)
+
+Biološka klasifikacija je još jedan savršen primer hijerarhijske strukture. Možemo reći da Pas jeste Sisar, a Sisar jeste Zivotinja. Ovde se fokusiramo na proširenje (extension). Svaki niži nivo u hijerarhiji dodaje nove sposobnosti i atribute. Zivotinja se hrani. Sisar se hrani i doji. Pas se hrani, doji i laje. Svaki nivo nasleđivanja proširuje klasu novim funkcionalnostima.
+
+```java
+class Zivotinja {
+    int starost;
+    public Zivotinja(int starost) {
+        this.starost = starost;
+    }
+    public void jedi() {
+        System.out.println("Ova životinja jede.");
+    }
+}
+
+class Sisar extends Zivotinja {
+    String bojaKrzna;
+    public Sisar(int starost, String bojaKrzna) {
+        super(starost);
+        this.bojaKrzna = bojaKrzna;
+    }
+    public void doji() {
+        System.out.println("Ovaj sisar doji svoje mladunce.");
+    }
+}
+
+class Pas extends Sisar {
+    String rasa;
+    public Pas(int starost, String bojaKrzna, String rasa) {
+        super(starost, bojaKrzna);
+        this.rasa = rasa;
+    }
+    public void laj() {
+        System.out.println("Av! Av!");
+    }
+}
+
+public class ZivotinjeTest {
+    public static void main(String[] args) {
+        Pas lesi = new Pas(5, "zlatna", "Škotski ovčar");
+
+        // Pristup poljima sa svih nivoa hijerarhije
+        System.out.println("Lesi je star " + lesi.starost + " godina."); // Iz klase Zivotinja
+        System.out.println("Boja krzna: " + lesi.bojaKrzna);             // Iz klase Sisar
+        System.out.println("Rasa: " + lesi.rasa);                        // Iz klase Pas
+
+        System.out.println();
+
+        // Poziv metoda sa svih nivoa hijerarhije
+        lesi.jedi();  // Metoda nasleđena od Zivotinja
+        lesi.doji();  // Metoda nasleđena od Sisar
+        lesi.laj();   // Metoda iz klase Pas
+    }
+}
+```
+
+Ovaj primer savršeno ilustruje kako objekat najniže klase u hijerarhiji, Pas, akumulira sva polja i metode svojih predaka. Ovo je primer višeslojnog nasleđivanja (multilevel inheritance).
+
+---
+
+## Primer 3: Hijerarhija Vozila (Grupisanje Zajedničkih Osobina)
+
+Sada ćemo pogledati situaciju gde više različitih klasa nasleđuje jednu zajedničku baznu klasu. Zamislimo različita vozila. Automobil jeste Vozilo i Bicikl takođe jeste Vozilo. Svrha ovog primera je da pokaže kako se zajedničke osobine grupišu u roditeljskoj klasi da bi se izbeglo ponavljanje koda. Na primer, i automobil i bicikl imaju maksimalnu brzinu i broj točkova.
+
+```java
+class Vozilo {
+    int maksimalnaBrzina;
+    int brojTockova;
+
+    public Vozilo(int maksimalnaBrzina, int brojTockova) {
+        this.maksimalnaBrzina = maksimalnaBrzina;
+        this.brojTockova = brojTockova;
+    }
+}
+
+class Automobil extends Vozilo {
+    int brojVrata;
+
+    public Automobil(int maksimalnaBrzina, int brojVrata) {
+        // Automobil uvek ima 4 točka, pa fiksiramo tu vrednost
+        super(maksimalnaBrzina, 4);
+        this.brojVrata = brojVrata;
+    }
+}
+
+class Bicikl extends Vozilo {
+    String tipRama;
+
+    public Bicikl(int maksimalnaBrzina, String tipRama) {
+        // Bicikl uvek ima 2 točka
+        super(maksimalnaBrzina, 2);
+        this.tipRama = tipRama;
+    }
+}
+
+public class VozilaTest {
+    public static void main(String[] args) {
+        Automobil mojAuto = new Automobil(220, 5);
+        System.out.println("--- Automobil ---");
+        System.out.println("Maksimalna brzina: " + mojAuto.maksimalnaBrzina + " km/h");
+        System.out.println("Broj točkova: " + mojAuto.brojTockova); // Nasleđeno od Vozilo
+        System.out.println("Broj vrata: " + mojAuto.brojVrata);
+
+        System.out.println();
+
+        Bicikl mojBicikl = new Bicikl(40, "aluminijumski");
+        System.out.println("--- Bicikl ---");
+        System.out.println("Maksimalna brzina: " + mojBicikl.maksimalnaBrzina + " km/h");
+        System.out.println("Broj točkova: " + mojBicikl.brojTockova); // Nasleđeno od Vozilo
+        System.out.println("Tip rama: " + mojBicikl.tipRama);
+    }
+}
+```
+
+Nasleđivanje je moćan alat za organizaciju koda i grupisanje zajedničkih karakteristika. Postavljanjem zajedničkih polja i metoda u baznu klasu, izbegavamo dupliranje koda (Don't Repeat Yourself - DRY princip) i činimo kod lakšim za održavanje.
+
+---
+
+## Primer 4: Organizaciona Struktura i Redefinisanje Metoda (Method Overriding)
+
+Naš poslednji primer se bavi modeliranjem različitih uloga unutar kompanije. Menadzer jeste Zaposleni i Programer takođe jeste Zaposleni. Obe uloge dele zajedničke atribute: ime, ID i platu. Međutim, njihove odgovornosti se razlikuju.
+
+Ovaj primer je idealan za demonstraciju redefinisanja metoda (eng. method overriding). Iako i menadžer i programer imaju metodu za prikaz informacija, sadržaj tih informacija je drugačiji. Menadžer će prikazati i svoj tim, a programer svoje programske jezike.
+
+```java
+import java.util.ArrayList;
+import java.util.Arrays;
+
+class Zaposleni {
+    String ime;
+    String id;
+    double plata;
+
+    public Zaposleni(String ime, String id, double plata) {
+        this.ime = ime;
+        this.id = id;
+        this.plata = plata;
+    }
+
+    public void prikaziInfo() {
+        System.out.println("ID: " + id + ", Ime: " + ime + ", Plata: " + plata + " EUR");
+    }
+}
+
+class Menadzer extends Zaposleni {
+    String odeljenje;
+
+    public Menadzer(String ime, String id, double plata, String odeljenje) {
+        super(ime, id, plata);
+        this.odeljenje = odeljenje;
+    }
+
+    // Redefinisanje (Overriding) metode iz nadklase
+    @Override
+    public void prikaziInfo() {
+        super.prikaziInfo(); // Prvo pozivamo originalnu metodu da ispiše osnovne podatke
+        System.out.println("  - Odeljenje: " + this.odeljenje);
+    }
+}
+
+class Programer extends Zaposleni {
+    ArrayList<String> programskiJezici;
+
+    public Programer(String ime, String id, double plata, String[] jezici) {
+        super(ime, id, plata);
+        this.programskiJezici = new ArrayList<>(Arrays.asList(jezici));
+    }
+
+    // Redefinisanje metode
+    @Override
+    public void prikaziInfo() {
+        super.prikaziInfo(); // Pozivamo originalnu metodu
+        System.out.println("  - Programski jezici: " + this.programskiJezici);
+    }
+}
+
+public class KompanijaTest {
+    public static void main(String[] args) {
+        Menadzer m = new Menadzer("Ana Anić", "M01", 3000, "Razvoj softvera");
+        Programer p = new Programer("Petar Petrović", "P01", 2000, new String[]{"Java", "SQL"});
+
+        System.out.println("--- Informacije o menadžeru ---");
+        m.prikaziInfo();
+
+        System.out.println("--- Informacije o programeru ---");
+        p.prikaziInfo();
+    }
+}
+```
+
+**Analiza Koda:**
+Anotacija `@Override`: Ova anotacija se stavlja iznad redefinisane metode. Ona nije obavezna, ali je dobra praksa. Govori kompajleru da nameravamo da redefinišemo metodu iz nadklase. 
+
+Poziv `super.metoda()`: Unutar redefinisanih prikaziInfo metoda, linija `super.prikaziInfo();` je ključna. Ona poziva originalnu verziju metode iz klase Zaposleni. Na taj način, mi ne pišemo ponovo kod za ispis osnovnih podataka, već samo proširujemo postojeću funkcionalnost dodavanjem novih informacija.

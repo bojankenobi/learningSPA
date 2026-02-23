@@ -1,0 +1,209 @@
+# 5. JS Modul 3: Spajanje sa HTML-om (DOM Manipulacija)
+
+Dobrodošli u najuzbudljiviji deo veb razvoja! Ovde pravimo prelaz sa pukog ispisivanja teksta u konzoli na pravljenje pravih, interaktivnih aplikacija. 
+
+Da bi JavaScript mogao da komunicira sa HTML-om, brauzer kreira nešto što se zove **DOM** (Document Object Model).
+
+---
+
+## Nedelja 9: Uvod u DOM (Document Object Model)
+
+Kada brauzer učita vaš HTML, on ga pretvara u strukturu drveta koju JavaScript može da razume i menja. To drvo se zove DOM. 
+
+
+
+Glavni objekat preko kog pristupamo svemu na stranici zove se `document`. Da bismo menjali HTML pomoću JS-a, prvo moramo da ga **selektujemo** (uhvatimo).
+
+```html
+<h1 id="glavni-naslov">Dobrodošli na sajt</h1>
+<p class="tekst">Ovo je neki pasus.</p>
+```
+
+```javascript
+// JavaScript kod za selektovanje
+
+// 1. getElementById - Hvata samo JEDAN element preko njegovog ID-ja
+let naslov = document.getElementById("glavni-naslov");
+console.log(naslov); // U konzoli će ispisati ceo <h1> tag!
+
+// 2. querySelector - Hvata PRVI element koji se poklapa sa CSS selektorom
+let pasus = document.querySelector(".tekst"); // Koristimo tačku za klasu, isto kao u CSS-u
+console.log(pasus);
+```
+
+---
+
+## Nedelja 10: Menjanje sadržaja i stilova
+
+Kada smo "uhvatili" element i stavili ga u varijablu, možemo mu raditi šta god poželimo!
+
+### 1. Menjanje teksta
+Svojstvo `textContent` nam omogućava da promenimo ono što piše unutar taga.
+
+```javascript
+let naslov = document.getElementById("glavni-naslov");
+naslov.textContent = "Novi naslov iz JavaScripta!"; // Tekst na ekranu se instant menja!
+```
+
+### 2. Menjanje CSS stilova i klasa
+Stilove možemo menjati direktno preko svojstva `style`, ali mnogo bolja praksa je korišćenje `classList` (dodavanje ili brisanje unapred napisanih CSS klasa).
+
+```javascript
+let pasus = document.querySelector(".tekst");
+
+// Direktno menjanje stila (Inline CSS)
+pasus.style.color = "blue";
+pasus.style.fontSize = "24px"; // Obratite pažnju: u JS-u se koristi camelCase umesto font-size
+
+// Dodavanje i brisanje CSS klasa (Mnogo bolja praksa!)
+// Pretpostavimo da u CSS-u imamo klasu .dark-mode { background: black; color: white; }
+document.body.classList.add("dark-mode"); // Cela stranica postaje tamna!
+// document.body.classList.remove("dark-mode"); // Vraća na staro
+```
+
+---
+
+## Nedelja 11: Događaji (Event Listeners)
+
+Kako da kod "zna" kada je korisnik kliknuo na dugme? JavaScript koristi "Osluškivače događaja" (`Event Listeners`). 
+Mi kažemo JS-u: *"Slušaj da li se desio klik na ovom dugmetu. Ako jeste, pokreni ovu funkciju."*
+
+```html
+<button id="moje-dugme">Klikni me!</button>
+<p id="brojac-prikaz">Kliknuto: 0 puta</p>
+```
+
+```javascript
+// 1. Selektujemo elemente
+let dugme = document.getElementById("moje-dugme");
+let prikaz = document.getElementById("brojac-prikaz");
+
+// 2. Pravimo varijablu koja čuva stanje
+let brojKlikova = 0;
+
+// 3. Dodajemo Event Listener (osluškivač događaja) na dugme
+dugme.addEventListener("click", function() {
+    // Sve što je ovde se izvršava SVAKI PUT kada se klikne na dugme
+    brojKlikova = brojKlikova + 1;
+    prikaz.textContent = `Kliknuto: ${brojKlikova} puta`;
+});
+```
+
+> 💡 **Tip:** Pored `click`, postoje i mnogi drugi događaji: `mouseenter` (prelazak mišem), `keydown` (pritisak na tastaturi), `submit` (slanje forme), itd.
+
+### Vežba: Napravi svoj brojač
+Klikni na dugme u prikazu desno i gledaj kako JavaScript menja HTML tekst!
+
+<CodePlayground 
+  mode="web"
+  defaultHtml={`<div style="text-align: center; padding: 20px;">
+  <h1 id="ekran">0</h1>
+  <button id="dugme" style="padding: 10px 20px; cursor: pointer;">
+    Uvećaj broj
+  </button>
+</div>`}
+  defaultCss={`h1 { font-family: sans-serif; color: #795548; font-size: 4rem; }
+button { background: #795548; color: white; border: none; border-radius: 5px; }`}
+  defaultJs={`let broj = 0;
+let h1 = document.getElementById("ekran");
+let btn = document.getElementById("dugme");
+
+btn.addEventListener("click", () => {
+    broj++;
+    h1.textContent = broj;
+    if(broj > 10) h1.style.color = "red";
+});`}
+/>
+
+---
+
+## Nedelja 12: Kreiranje HTML-a iz JavaScript-a
+
+Pored toga što može da menja postojeći HTML, JS može da kreira potpuno nove tagove iz ničega i da ih ubacuje na stranicu. Ovo je temelj kako rade sve To-Do liste, korpe za kupovinu i chat aplikacije.
+
+```html
+<ul id="lista-zadataka">
+    <li>Kupi mleko</li>
+</ul>
+```
+
+```javascript
+// 1. Kreiramo potpuno novi, prazan <li> tag u memoriji
+let noviZadatak = document.createElement("li");
+
+// 2. Dodajemo mu tekst
+noviZadatak.textContent = "Nauči JavaScript";
+
+// 3. Dodajemo mu CSS klasu (ako želimo)
+noviZadatak.classList.add("vazno");
+
+// 4. Ubacujemo ga na stranicu! 
+// Prvo nađemo roditelja (<ul> listu), a zatim 'zakačimo' naše dete na kraj (appendChild)
+let lista = document.getElementById("lista-zadataka");
+lista.appendChild(noviZadatak);
+```
+
+---
+
+# Zadaci za Vežbu (Modul 3)
+
+### Zadatak 1: Magično dugme (Events i TextContent)
+Imate u HTML-u tag `<h2 id="poruka">Zatvoreno</h2>` i `<button id="otvori">Otvori radnju</button>`.
+Napišite JS kod koji sluša klik na dugme. Kada se klikne, tekst u `h2` tagu treba da se promeni u "Otvoreno!", a tekst na samom dugmetu treba da se promeni u "Uspešno".
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Magično dugme"
+  kod={`// 1. Selektujemo elemente
+let naslovPoruka = document.getElementById("poruka");
+let dugmeOtvori = document.getElementById("otvori");
+
+// 2. Dodajemo listener za klik
+dugmeOtvori.addEventListener("click", function() {
+    // Menjamo tekst naslova
+    naslovPoruka.textContent = "Otvoreno!";
+    
+    // Menjamo tekst samog dugmeta
+    dugmeOtvori.textContent = "Uspešno";
+});`}
+  analiza="Kroz event listener možemo menjati osobine ne samo drugih elemenata (naslovPoruka), već i samog elementa na koji je kliknuto (dugmeOtvori)."
+/>
+
+### Zadatak 2: Prekidač za Dark Mode (classList)
+Zamislite da imate dugme `<button id="tema-dugme">Promeni temu</button>`. Napišite kod koji na klik dugmeta **dodaje ili oduzima** (toggle) klasu `tamna-tema` na `document.body` elementu. 
+*(Hint: Slično kao add() i remove(), classList ima metodu koja se zove toggle(). Proverite na internetu kako radi!)*
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Dark Mode"
+  kod={`let dugmeTema = document.getElementById("tema-dugme");
+
+dugmeTema.addEventListener("click", function() {
+    // toggle() metoda je fantastična! 
+    // Ako klasa ne postoji, ona je dodaje. Ako već postoji, ona je briše.
+    document.body.classList.toggle("tamna-tema");
+});`}
+  analiza="Metoda toggle() je idealna za prekidače poput Dark Mode-a ili padajućih menija, jer nam štedi pisanje if/else provera da li klasa već postoji."
+/>
+
+### Zadatak 3: Dinamička To-Do Lista
+Imate prazan `<ul>` element sa ID-jem `moja-lista`. Napišite JS funkciju `dodajStavku(tekst)` koja će kreirati novi `<li>` element, postaviti mu tekst koji je prosleđen u parametar, i ubaciti ga u tu listu. 
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: To-Do Lista"
+  kod={`function dodajStavku(tekstZadatka) {
+    // 1. Kreiramo novi <li> tag
+    let novaStavka = document.createElement("li");
+    
+    // 2. Postavljamo mu tekst iz parametra funkcije
+    novaStavka.textContent = tekstZadatka;
+    
+    // 3. Nalazimo listu i ubacujemo stavku u nju
+    let lista = document.getElementById("moja-lista");
+    lista.appendChild(novaStavka);
+}
+
+// Testiramo funkciju
+dodajStavku("Kupi hleb");
+dodajStavku("Napiši domaći");`}
+  analiza="Ova funkcija je temelj za prave To-Do aplikacije. U realnom scenariju, umesto da ručno zovemo dodajStavku('Kupi hleb'), mi bismo vrednost uzimali iz nekog input polja na klik dugmeta."
+/>
+

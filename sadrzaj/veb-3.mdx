@@ -1,0 +1,246 @@
+# 3. JS Modul 1: Temelji i Logika
+
+Ako je HTML kostur, a CSS koža i odeća naše veb stranice, onda je **JavaScript (JS)** njen mozak i mišićni sistem. Bez JS-a, stranica je samo lepa slika. Sa JS-om, ona postaje interaktivna aplikacija koja može da računa, donosi odluke i komunicira sa serverima.
+
+U ovom prvom modulu, zaboravićemo nakratko na HTML i CSS. Fokusiraćemo se isključivo na to **kako JavaScript razmišlja** i kako računar obrađuje podatke. Sve primere ćemo pokretati u "Konzoli" vašeg brauzera (pritisnite `F12` na tastaturi i otvorite tab *Console*).
+
+---
+
+## Nedelja 1: Uvod i Varijable (Promenljive)
+
+Računar mora negde da zapamti podatke dok radi sa njima. Za to koristimo **varijable**. Možete ih zamisliti kao kutije sa imenima u koje ubacujemo vrednosti.
+
+
+
+U modernom JavaScript-u koristimo dve ključne reči za pravljenje ovih "kutija":
+* `let`: Koristimo kada znamo da će se vrednost u kutiji **menjati** (npr. rezultat u igrici, broj godina).
+* `const` (konstanta): Koristimo kada vrednost **ne sme da se menja** (npr. datum rođenja, PDV stopa).
+* *(Napomena: Nekada se koristila reč `var`, ali je danas izbegavamo jer može izazvati bagove u većim programima).*
+
+### Primer: Osnovna matematika u JS-u
+
+```javascript
+// Deklaracija varijabli
+let imeKorisnika = "Marko";
+const godinaRodjenja = 2005;
+let trenutnaGodina = 2024;
+
+// Računanje
+let brojGodina = trenutnaGodina - godinaRodjenja;
+
+// Ispis u konzolu (Console)
+console.log("Zdravo, " + imeKorisnika + "!");
+console.log("Ti imaš " + brojGodina + " godina.");
+
+// Promena vrednosti (Ovo radi jer smo koristili 'let')
+trenutnaGodina = 2025;
+brojGodina = trenutnaGodina - godinaRodjenja;
+console.log("Sledeće godine imaćeš " + brojGodina + " godina.");
+
+// godinaRodjenja = 2000; // OVO BI IZBACILO GREŠKU! 'const' se ne menja.
+```
+
+---
+
+## Nedelja 2: Tipovi podataka i Operatori
+
+Kutije (varijable) mogu da čuvaju različite vrste podataka:
+1. **String** (Tekst): Uvek ide pod navodnike `"tekst"` ili `'tekst'`.
+2. **Number** (Broj): Piše se normalno `42` ili `3.14`.
+3. **Boolean** (Logička vrednost): Može biti samo `true` (tačno) ili `false` (netačno).
+
+### Operatori poređenja i Logički operatori
+Da bi računar doneo odluku, on mora da uporedi vrednosti.
+* `===` (Strogo jednako) - Da li su dve vrednosti potpuno iste?
+* `!==` (Nije jednako)
+* `>`, `<`, `>=`, `<=` (Veće, manje, veće ili jednako...)
+* `&&` (I / AND) - Oba uslova moraju biti tačna.
+* `||` (ILI / OR) - Barem jedan uslov mora biti tačan.
+
+### Primer: Template Literals (Spajanje teksta i varijabli)
+U modernom JS-u, za spajanje teksta koristimo "backticks" (\`) i znak `${}`. Ovo je mnogo čistije od korišćenja znaka `+`.
+
+```javascript
+let proizvod = "Laptop";
+let cena = 85000;
+let naStanju = true;
+
+// Strogo poređenje (vraća true ili false)
+console.log(cena > 50000); // true (cena jeste veća)
+console.log(cena === 85000); // true
+
+// Spajanje stringova (Template Literal)
+let poruka = `Ime proizvoda je ${proizvod}, a cena je ${cena} RSD. Da li je na stanju? ${naStanju}`;
+
+console.log(poruka);
+```
+
+<Quiz pitanje="Koja ključna reč se koristi za kreiranje varijable čija vrednost NE SME da se menja?" opcije="let|var|const|static" tacanOdgovorIndex="2" />
+
+---
+
+## Nedelja 3: Kontrola toka (If/Else)
+
+Do sada se naš kod izvršavao liniju po liniju, od vrha do dna. Ali šta ako želimo da se neki kod izvrši **samo ako** je određeni uslov ispunjen? Tu na scenu stupa `if/else` blok.
+
+Program donosi odluke baš kao i mi: *"Ako (if) pada kiša, poneću kišobran. Inače (else), poneću naočare za sunce."*
+
+### Primer: Provera godina korisnika
+
+```javascript
+let korisnikGodine = 16;
+let imaVipKartu = false;
+
+// Da li korisnik sme da uđe u noćni klub?
+if (korisnikGodine >= 18) {
+    console.log("Dobrodošli! Imate pravo pristupa.");
+} else if (imaVipKartu === true) {
+    console.log("Nemate 18 godina, ali imate VIP kartu. Ulaz je odobren.");
+} else {
+    // Ako nijedan gornji uslov nije ispunjen, izvršava se ovaj blok
+    let faliGodina = 18 - korisnikGodine;
+    console.log(`Pristup odbijen. Vratite se za ${faliGodina} godine/a.`);
+}
+```
+### Vežba: Provera prava na ulaz
+Promeni vrednost varijable `godine` i `imaKartu` u editoru ispod i vidi kako program donosi odluku u konzoli!
+
+<CodePlayground 
+  mode="console"
+  defaultJs={`let ime = "Marko";
+let godine = 17;
+let imaKartu = true;
+
+if (godine >= 18 || imaKartu) {
+    console.log("DOBRODOŠLI, " + ime + "! Ulaz je dozvoljen.");
+} else {
+    console.log("Žao nam je, " + ime + ". Nemate 18 godina.");
+}`}
+/>
+
+---
+
+## Nedelja 4: Petlje (For i While) - Osnova automatizacije
+
+Šta ako želimo da ispišemo brojeve od 1 do 100? Nećemo valjda pisati `console.log()` sto puta? Računari su savršeni za dosadne zadatke koji se ponavljaju. Za to koristimo **petlje** (loops).
+
+### For Petlja
+Najčešće se koristi kada tačno znamo koliko puta želimo da ponovimo radnju.
+Sastoji se iz 3 dela:
+1. **Brojač** (npr. `let i = 1`)
+2. **Uslov** do kada se vrti (npr. `i <= 5`)
+3. **Korak** povećanja brojača (npr. `i++` što znači uvećaj za 1)
+
+```javascript
+// Ispisivanje brojeva od 1 do 5
+for (let i = 1; i <= 5; i++) {
+    console.log(`Ovo je prolaz broj ${i}`);
+}
+
+// Ispisivanje samo PARNIH brojeva od 1 do 10
+console.log("Parni brojevi:");
+for (let i = 2; i <= 10; i = i + 2) {
+    console.log(i);
+}
+```
+
+### While Petlja
+Koristi se kada ne znamo tačan broj ponavljanja, već se petlja vrti **sve dok** je neki uslov tačan.
+
+```javascript
+let baterija = 3; // 3 procenata
+
+while (baterija > 0) {
+    console.log(`Uređaj radi. Baterija: ${baterija}%`);
+    baterija--; // Smanjujemo bateriju za 1
+}
+
+console.log("Baterija je prazna. Uređaj se gasi.");
+```
+
+### Vežba: Generator parnih brojeva
+Podesi do kog broja petlja treba da ide menjanjem vrednosti `limit`.
+
+<CodePlayground 
+  mode="console"
+  defaultJs={`let limit = 20;
+
+console.log("Ispisujem parne brojeve do " + limit + ":");
+
+for (let i = 1; i <= limit; i++) {
+    if (i % 2 === 0) {
+        console.log("Pronađen paran broj: " + i);
+    }
+}`}
+/>
+
+---
+
+# Zadaci za Vežbu (Modul 1)
+
+Vreme je da testirate svoje znanje! Pokušajte da rešite zadatke samostalno u vašem editoru ili konzoli, a zatim kliknite na dugme da uporedite vaše rešenje sa našim.
+
+### Zadatak 1: Kalkulator popusta
+Napišite kod koji definiše varijable za `cenaProizvoda` (npr. 2000) i `popustProcenat` (npr. 20). Izračunajte koliko iznosi popust u dinarima, a zatim oduzmite to od originalne cene da dobijete novu cenu. Ispišite rezultat koristeći Template Literals (backticks).
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Kalkulator popusta"
+  kod={`let cenaProizvoda = 2000;
+const popustProcenat = 20;
+
+let iznosPopusta = (cenaProizvoda * popustProcenat) / 100;
+let konacnaCena = cenaProizvoda - iznosPopusta;
+
+console.log(\`Originalna cena: \${cenaProizvoda} RSD.\`);
+console.log(\`Popust: \${iznosPopusta} RSD.\`);
+console.log(\`Konačna cena za plaćanje: \${konacnaCena} RSD.\`);`}
+  analiza="Koristimo 'let' za cene koje se računaju, a 'const' za popust jer se stopa popusta u ovom zadatku ne menja. Znak backtick (\`) nam omogućava da lako ubacimo varijable direktno u string."
+/>
+
+### Zadatak 2: Logovanje na sistem (If/Else)
+Definišite varijable `unetiUsername` i `unetiPassword`. Zatim upotrebite `if/else` blok. Ako je username jednak "admin" **I** password jednak "tajna123", ispišite "Uspešna prijava". U suprotnom, ispišite "Pogrešni podaci".
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: Logovanje"
+  kod={`let unetiUsername = "admin";
+let unetiPassword = "pogresna_lozinka"; // Menjajte ovo da testirate
+
+// Koristimo && (I) jer OBA uslova moraju biti tačna
+if (unetiUsername === "admin" && unetiPassword === "tajna123") {
+    console.log("Uspešna prijava. Dobrodošli u kontrolnu tablu!");
+} else {
+    console.log("Greška: Pogrešno korisničko ime ili lozinka.");
+}`}
+  analiza="Obratite pažnju na trostruki znak jednakosti (===). On proverava da li je uneti tekst potpuno identičan onom koji očekujemo. Operater && zahteva da oba dela budu 'true'."
+/>
+
+### Zadatak 3: FizzBuzz izazov (Petlje + Kontrola toka)
+Ovo je najčešći zadatak na intervjuima za juniore! Napišite `for` petlju koja ide od 1 do 15. 
+* Ako je broj deljiv sa 3, ispišite "Fizz".
+* Ako je broj deljiv sa 5, ispišite "Buzz".
+* Ako je deljiv i sa 3 i sa 5, ispišite "FizzBuzz".
+* U suprotnom, ispišite sam broj.
+*(Pomoć: Koristite operator `%` koji vraća ostatak pri deljenju. Npr. `9 % 3 === 0`)*
+
+<ZadatakZaVezbu 
+  naslov="Rešenje: FizzBuzz"
+  kod={`for (let i = 1; i <= 15; i++) {
+    // Prvo proveravamo najteži uslov (deljivo sa oba)
+    if (i % 3 === 0 && i % 5 === 0) {
+        console.log("FizzBuzz");
+    } 
+    // Zatim ostale uslove
+    else if (i % 3 === 0) {
+        console.log("Fizz");
+    } 
+    else if (i % 5 === 0) {
+        console.log("Buzz");
+    } 
+    // Ako ništa nije ispunjeno, ispiši broj
+    else {
+        console.log(i);
+    }
+}`}
+  analiza="Redosled u if/else blokovima je kritičan! Morali smo prvo da proverimo da li je deljiv i sa 3 i sa 5 (npr. broj 15). Da smo prvo proverili samo broj 3, program bi ispisao 'Fizz' i preskočio ostatak koda."
+/>
+

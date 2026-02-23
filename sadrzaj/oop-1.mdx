@@ -1,0 +1,78 @@
+# 1. Uvod u Objektno Orijentisano Programiranje (OOP)
+
+Dobrodošli na predavanje o Objektno Orijentisanom Programiranju! Danas ćemo zakoračiti u svet modernog programiranja i naučiti kako da razmišljamo o problemima na nov, intuitivniji način. Ovaj pristup nam pomaže da pišemo organizovaniji, fleksibilniji i lakši za održavanje kod, što je ključno za razvoj kompleksnih softverskih sistema.
+
+Glavni cilj OOP-a je upravljanje složenošću (*complexity*). Kako softver raste, postaje sve teže pratiti sve delove i njihove međusobne veze. OOP nam daje alate da grupišemo povezane podatke i funkcionalnosti u samostalne jedinice (objekte), što drastično smanjuje mentalno opterećenje i omogućava timovima da efikasnije sarađuju.
+
+## Proceduralno vs Objektno Programiranje
+
+**Proceduralno Programiranje**
+Zamislite da pravite sendvič prateći recept korak po korak. To je suština proceduralnog programiranja. Pišemo niz instrukcija (procedura ili funkcija) koje računar izvršava redom. Fokus je na akcijama.
+* Fokus na procedurama i funkcijama.
+* Podaci i funkcije su odvojeni.
+* Teže za održavanje kod velikih projekata.
+
+**Objektno Orijentisano Programiranje (OOP)**
+Sada zamislite da gradite kuću od LEGO kockica. Svaka kockica je "objekat" sa svojim osobinama (boja, veličina) i mogućnostima (može se spojiti sa drugom). U OOP-u, svet posmatramo kroz objekte koji međusobno komuniciraju. Fokus je na stvarima (objektima).
+* Fokus na objektima koji objedinjuju podatke i ponašanje.
+* Kod je modularan i lakši za ponovnu upotrebu.
+* Intuitivnije preslikava stvarni svet u program.
+
+---
+
+# 2. Osnovni Koncepti
+
+Objektno orijentisano programiranje se zasniva na nekoliko ključnih principa koji ga čine moćnim. Mi ćemo ih zvati "stubovima" OOP-a. Razumevanje ovih koncepata je temelj za efikasno korišćenje OOP paradigme.
+
+* **📦 Enkapsulacija:** Sakrivanje složenosti. Objekat čuva svoje stanje privatnim i nudi javne metode za interakciju.
+* **👨‍👩‍👧 Nasleđivanje:** Ponovna upotreba koda. Klasa može naslediti atribute i metode od druge klase.
+* **🎭 Polimorfizam:** "Više oblika". Jedna akcija se može izvršiti na različite načine, zavisno od objekta.
+* **🎨 Apstrakcija:** Prikazivanje samo bitnih informacija i sakrivanje detalja implementacije.
+
+---
+
+## Klase i Objekti: Nacrt i Kuća
+
+Ovo je najfundamentalniji koncept u OOP-u. Sve počinje odavde. Moramo jasno razlikovati šta je plan (**klasa**), a šta je stvarna stvar napravljena po tom planu (**objekat**).
+
+**Klasa (Class)**
+Klasa je nacrt ili šablon za kreiranje objekata. Ona definiše:
+* **Atribute (Attributes):** Osobine koje će objekat imati (npr. boja, ime, brzina). To su promenljive unutar klase.
+* **Metode (Methods):** Akcije koje će objekat moći da izvršava (npr. vozi, koči, laj). To su funkcije unutar klase.
+
+> Na primer, klasa `Automobil` bi definisala da svaki automobil ima boju, marku i brzinu, i da može da ubrza i zakoči.
+
+**Objekat (Object)**
+Objekat je instanca (konkretan primerak) klase. To je stvarna "stvar" kreirana prema nacrtu klase, sa konkretnim vrednostima za svoje atribute.
+* Moj plavi "Audi" je jedan objekat.
+* Oba su objekti klase `Automobil`.
+* Objekat je ono što "živi" u memoriji računara i sa čime radimo u programu.
+
+---
+
+## Primer u Javi
+
+Hajde da vidimo kako izgleda jednostavna klasa `Ucenik` u Javi.
+
+```java
+public class Ucenik {
+    // Atributi
+    String ime;
+    String prezime;
+    int razred;
+
+    // Metoda
+    public void predstaviSe() {
+        System.out.println("Zdravo, ja sam " + ime + " " + prezime + " i idem u " + razred + ". razred.");
+    }
+}
+
+
+// Kreiranje prvog objekta
+Ucenik ucenik1 = new Ucenik();
+ucenik1.ime = "Petar";
+ucenik1.prezime = "Petrović";
+ucenik1.razred = 3;
+
+// Pozivanje metode nad objektima
+ucenik1.predstaviSe();

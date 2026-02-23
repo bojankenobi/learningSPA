@@ -1,0 +1,28 @@
+# Uvod u Baze Podataka (SQL)
+
+Baze podataka su organizovane kolekcije strukturiranih informacija, ili podataka, koje se obično čuvaju u elektronskom obliku u računarskom sistemu.
+
+## 1. Relacioni Model i SQL
+
+Za komunikaciju sa relacionim bazama podataka koristimo **SQL (Structured Query Language)**.
+Pomoću SQL-a možemo da izvlačimo, dodajemo, brišemo i menjamo podatke.
+
+Najosnovnija komanda u SQL-u je `SELECT`. Ona služi za čitanje podataka.
+
+### Primer strukture tabele "Ucenici":
+| id | ime | prezime | razred |
+|---|---|---|---|
+| 1 | Petar | Petrović | 4 |
+| 2 | Ana | Jovanović | 3 |
+
+## 2. Interaktivna Vežba: SELECT upit
+
+Vaš zadatak je da napišete upit koji će izvući **sve kolone** iz tabele `Ucenici`.
+*Podsetnik: Za selektovanje svih kolona koristi se znak `*`.*
+
+<SqlEditor 
+  ocekivaniUpit="SELECT * FROM Ucenici" 
+  porukaUspesno="Bravo! Izvukli ste sve podatke: Petar Petrović i Ana Jovanović." 
+/>
+
+Kada uspešno savladate ovaj zadatak, prelazimo na složenije upite pomoću `WHERE` klauzule.

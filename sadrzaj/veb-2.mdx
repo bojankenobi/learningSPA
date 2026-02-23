@@ -1,0 +1,131 @@
+# 2. Stilizovanje uz CSS (Cascading Style Sheets)
+
+U prethodnoj lekciji smo izgradili "kostur" naše kuće pomoću HTML-a. Sada je vreme da tu kuću ofarbamo, dodamo prozore, rasporedimo nameštaj i učinimo je prelepom. Za to nam služi **CSS**.
+
+CSS (Kaskadni listovi stilova) je jezik koji opisuje kako bi HTML elementi trebalo da budu prikazani na ekranu. On kontroliše boje, fontove, razmake, pozicije elemenata, pa čak i animacije.
+
+## Kako povezujemo CSS i HTML?
+
+Postoje tri načina da dodamo CSS u naš HTML dokument, ali se u praksi najviše koristi treći (spoljašnji fajl).
+
+**1. Inline CSS (Direktno u tagu)**
+Koristi se za brze, sitne ispravke, ali se generalno izbegava jer prlja HTML kod.
+```html
+<p style="color: blue; font-size: 18px;">Ovo je plavi tekst.</p>
+```
+
+**2. Interni CSS (U head sekciji)**
+Pišemo ga unutar `<style>` taga. Dobar je za veoma male, pojedinačne stranice.
+```html
+<head>
+    <style>
+        p { color: red; }
+    </style>
+</head>
+```
+
+**3. Eksterni CSS (Spoljašnji fajl) - NAJBOLJA PRAKSA!**
+Kreiramo poseban fajl (npr. `stil.css`) i povezujemo ga sa HTML-om. Ovo nam omogućava da jednim fajlom stilizujemo ceo sajt od 100 stranica!
+```html
+<head>
+    <link rel="stylesheet" href="stil.css">
+</head>
+```
+
+---
+
+## Osnovna sintaksa i Selektori
+
+Da bismo stilizovali element, moramo prvo da ga "naciljamo" (selektujemo). Zatim mu dodeljujemo **svojstva** i **vrednosti** unutar vitičastih zagrada `{ }`.
+
+### Selektori
+Postoje tri osnovna načina da selektujemo elemente:
+
+1. **Element selektor:** Gađa sve tagove istog tipa (npr. sve pasuse).
+2. **Class (Klasa) selektor:** Gađa elemente koji imaju određenu klasu. Označava se tačkom `.`.
+3. **ID selektor:** Gađa JEDAN specifičan element sa tim ID-jem. Označava se tarabom `#`.
+
+```css
+/* 1. Element selektor (Menja sve <p> tagove) */
+p {
+    color: darkgray;
+    line-height: 1.5;
+}
+
+/* 2. Class selektor (Menja sve elemente sa class="dugme-crveno") */
+.dugme-crveno {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+/* 3. ID selektor (Menja samo jedan element sa id="glavni-naslov") */
+#glavni-naslov {
+    text-align: center;
+    font-size: 32px;
+}
+```
+
+U HTML-u bi to izgledalo ovako:
+```html
+<h1 id="glavni-naslov">Moj Naslov</h1>
+<p>Neki tekst.</p>
+<button class="dugme-crveno">Klikni me</button>
+<a href="#" class="dugme-crveno">I ja sam crveno dugme!</a>
+```
+
+<Quiz pitanje="Koji CSS selektor koristimo za stilizovanje elemenata sa specifičnom klasom (class)?" opcije="# (Taraba)|. (Tačka)|* (Zvezdica)|Nista od navedenog" tacanOdgovorIndex="1" />
+
+---
+
+## CSS Box Model (Model Kutije)
+
+Ovo je apsolutno najvažniji koncept u celom veb dizajnu! 
+Svaki HTML element na ekranu brauzer posmatra kao pravougaonu **kutiju**. 
+
+Ova kutija se sastoji od 4 sloja (od unutra ka spolja):
+1. **Content (Sadržaj):** Sam tekst, slika ili video.
+2. **Padding (Unutrašnja margina):** Prazan prostor *unutar* granica elementa (diše oko teksta).
+3. **Border (Ivica/Granica):** Sama ivica kutije (može biti nevidljiva, puna linija, isprekidana...).
+4. **Margin (Spoljašnja margina):** Prazan prostor *izvan* granica elementa. Odguruje druge elemente od sebe.
+
+Probaj da promeniš debljinu okvira (border) ili boju teksta u CSS-u ispod i pogledaj rezultat uživo na desnoj strani!
+
+<CodePlayground 
+  mode="web"
+  defaultHtml={`<div class="kartica">
+  <h2>Učim Veb Razvoj!</h2>
+  <p>Ovo je moj prvi interaktivni kod.</p>
+</div>`}
+  defaultCss={`.kartica { 
+  background: #f4f4f4; 
+  padding: 20px; 
+  border-left: 5px solid #795548; 
+  color: #333;
+}`}
+  defaultJs={``}
+/>
+
+---
+
+## Boje i Tipografija
+
+CSS nudi hiljade načina da sredite tekst i boje. Boje možemo zadavati na engleskom jeziku (npr. `red`, `blue`), preko HEX koda (`#FF0000`) ili RGB koda (`rgb(255, 0, 0)`).
+
+```css
+body {
+    /* Tipografija */
+    font-family: 'Arial', sans-serif; /* Menja font */
+    font-size: 16px; /* Veličina slova */
+    font-weight: bold; /* Debljina slova */
+    text-transform: uppercase; /* PRETVARA SVE U VELIKA SLOVA */
+    
+    /* Boje */
+    color: #333333; /* Boja samog teksta (tamno siva) */
+    background-color: #F4F4F4; /* Boja pozadine cele stranice */
+}
+```
+
+Sada kada imamo HTML kostur i CSS boje, sajt je prelep, ali je i dalje statičan (kao slika). U sledećoj lekciji, uvodimo JavaScript kako bismo dodali interaktivnost i oživeli naš projekat!
+

@@ -1,0 +1,192 @@
+# 1. Polimorfizam: Više Oblika
+
+Polimorfizam na grčkom znači "imati više oblika". U Javi, polimorfizam nam omogućava da izvršimo istu akciju na različite načine. Postoje dva glavna tipa polimorfizma:
+
+## 1.1 Statički (Compile-time) Polimorfizam: Preopterećenje Metoda (Method Overloading)
+
+Ovo se dešava kada u istoj klasi imamo više metoda sa istim imenom, ali različitim parametrima (različit broj parametara, različit tip, ili oboje). Kompajler odlučuje koju metodu da pozove na osnovu argumenata koje smo prosledili.
+
+```java
+class Kalkulator {
+    public int saberi(int a, int b) {
+        return a + b;
+    }
+    
+    // Ista metoda, ali sa 3 parametra
+    public int saberi(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    // Ista metoda, ali sa double tipom
+    public double saberi(double a, double b) {
+        return a + b;
+    }
+}
+
+public class Glavna {
+    public static void main(String[] args) {
+        Kalkulator k = new Kalkulator();
+        System.out.println(k.saberi(2, 3));      // Poziva prvu metodu
+        System.out.println(k.saberi(2, 3, 4));  // Poziva drugu metodu
+        System.out.println(k.saberi(2.5, 3.5)); // Poziva treću metodu
+    }
+}
+```
+
+## 1.2 Dinamički (Run-time) Polimorfizam: Redefinisanje Metoda (Method Overriding)
+
+Ovo se dešava kada podklasa pruži specifičnu implementaciju metode koja je već definisana u njenoj nadklasi. Odluka o tome koja metoda će se izvršiti donosi se u vreme izvršavanja programa (run-time), na osnovu tipa objekta.
+
+Ovo je ono što najčešće podrazumevamo pod "polimorfizmom" u OOP kontekstu. Ključno je za fleksibilnost i nadogradivost koda.
+
+```java
+class Zivotinja {
+    public void oglasiSe() {
+        System.out.println("Životinja se oglašava");
+    }
+}
+
+class Pas extends Zivotinja {
+    @Override
+    public void oglasiSe() {
+        System.out.println("Pas laje: Av av!");
+    }
+}
+
+public class Glavna {
+    public static void main(String[] args) {
+        // Upotreba
+        Zivotinja z = new Pas(); // z je tipa Zivotinja, ali objekat je Pas
+        z.oglasiSe();            // U vreme izvršavanja, JVM vidi da je objekat Pas
+                                 // i poziva metodu iz klase Pas.
+    }
+}
+```
+
+---
+
+# 2. Apstrakcija: Fokusiranje na Bitno
+
+Apstrakcija je proces sakrivanja implementacionih detalja i prikazivanja samo funkcionalnosti korisniku. Drugim rečima, korisnik zna šta objekat radi, ali ne i kako to radi.
+
+> 🚗 **Dobar primer je vožnja automobila.** Da biste vozili, morate znati da koristite volan, pedale i menjač (interfejs). Ne morate znati kako motor sa unutrašnjim sagorevanjem radi, kako se snaga prenosi na točkove, ili kako radi elektronski sistem ubrizgavanja goriva (implementacija).
+
+### Kako se postiže u Javi?
+Apstrakcija se u Javi najčešće postiže korišćenjem:
+* **Apstraktnih klasa (Abstract Classes):** Klasa koja se ne može instancirati (ne može se kreirati objekat od nje). Može imati i apstraktne (bez implementacije) i konkretne metode. Služi kao osnova za druge klase koje je nasleđuju.
+* **Interfejsa (Interfaces):** Potpuno apstraktan "ugovor" koji definiše skup metoda koje klasa mora da implementira. Ne može imati implementaciju metoda (u starijim verzijama Jave).
+
+### Zašto je ovo važno?
+1.  **Smanjuje složenost:** Fokusiramo se na interakciju sa objektom na višem nivou.
+2.  **Olakšava održavanje:** Možemo promeniti internu implementaciju bez promene spoljnog koda koji je koristi.
+3.  **Povećava sigurnost:** Sprečava korisnika da napravi promene koje bi mogle da naruše konzistentnost objekta.
+
+## Primer: Apstraktna klasa `Oblik`
+
+Definišemo apstraktnu klasu `Oblik`. Svaki oblik mora imati mogućnost da izračuna svoju površinu, ali ne znamo kako se to radi za "apstraktni" oblik. Zato je metoda `povrsina()` apstraktna, i svaka konkretna klasa koja nasledi `Oblik` mora da pruži svoju implementaciju.
+
+```java
+// Apstraktna klasa - ne može se kreirati objekat tipa Oblik
+abstract class Oblik {
+    // Apstraktna metoda - nema telo, samo potpis
+    // Svaka podklasa MORA da je implementira
+    public abstract double povrsina();
+
+    // Apstraktna klasa može imati i konkretne metode
+    public void prikazi() {
+        System.out.println("Ovo je neki geometrijski oblik.");
+    }
+}
+
+class Krug extends Oblik {
+    private double poluprecnik = 5.0;
+    
+    // Pružamo implementaciju za apstraktnu metodu
+    @Override
+    public double povrsina() {
+        return Math.PI * poluprecnik * poluprecnik;
+    }
+}
+
+public class Glavna {
+    public static void main(String[] args) {
+        // Greška! Ne možemo kreirati objekat apstraktne klase.
+        // Oblik o = new Oblik(); 
+
+        // Ovo je ispravno
+        Oblik krug = new Krug();
+        krug.prikazi();
+        System.out.println("Površina kruga je: " + krug.povrsina());
+    }
+}
+```
+
+<Quiz pitanje="Šta od navedenog NE može imati sopstvene objekte (instance)?" opcije="Obična klasa|Apstraktna klasa|Podklasa" tacanOdgovorIndex="1" />
+
+---
+
+# 3. UML: Jezik za Crtanje Softvera
+
+Unified Modeling Language (UML) je standardizovani grafički jezik za vizuelizaciju, specificiranje, konstruisanje i dokumentovanje softverskih sistema. To je kao arhitektonski nacrt za zgradu, samo što je za softver. Pomaže nam da planiramo i komuniciramo ideje pre nego što napišemo kod.
+
+Postoji mnogo vrsta UML dijagrama, ali za nas je na početku najvažniji Dijagram Klasa (Class Diagram), jer direktno prikazuje strukturu našeg OOP koda.
+
+## Dijagram Klasa
+
+Dijagram klasa prikazuje klase u sistemu, njihove atribute, metode i odnose između klasa. Osnovni element je pravougaonik podeljen na tri dela:
+1.  **Gornji deo:** Ime klase.
+2.  **Srednji deo:** Lista atributa.
+3.  **Donji deo:** Lista metoda.
+
+**Oznake vidljivosti (Visibility):**
+* `+` public: Vidljivo svima.
+* `-` private: Vidljivo samo unutar klase.
+* `#` protected: Vidljivo unutar klase i u njenim podklasama.
+
+```text
++---------------------------------------+
+|              ImeKlase                 |
++---------------------------------------+
+| - atribut1: TipPodatka                |
+| + atribut2: TipPodatka                |
++---------------------------------------+
+| + metoda1(parametar: Tip): PovratniTip|
+| - metoda2(): void                     |
++---------------------------------------+
+```
+
+### Primer: UML dijagram za klasu `Ucenik`
+
+Ovako bi izgledao UML dijagram za našu `Ucenik` klasu sa enkapsulacijom.
+
+```text
++-----------------------------------+
+|               Ucenik              |
++-----------------------------------+
+| - ime: String                     |
+| - ocena: int                      |
++-----------------------------------+
+| + setIme(novoIme: String): void   |
+| + getIme(): String                |
+| + setOcena(novaOcena: int): void  |
+| + getOcena(): int                 |
++-----------------------------------+
+```
+Ovaj dijagram jasno i sažeto prikazuje sve bitne informacije o klasi `Ucenik`.
+
+## Odnosi Između Klasa
+
+Osim nasleđivanja, klase mogu biti u različitim odnosima. UML nam pomaže da vizuelizujemo te veze.
+
+1.  **Asocijacija ("koristi"):**
+    `Klasa A ⎯⎯⎯⎯⎯ Klasa B`
+    *Student koristi Knjigu. Nezavisni su.*
+
+2.  **Agregacija ("ima"):**
+    `Klasa A ◇⎯⎯⎯⎯⎯ Klasa B`
+    *Departman ima Profesora. Profesor može postojati i bez departmana.*
+
+3.  **Kompozicija ("je deo"):**
+    `Klasa A ◆⎯⎯⎯⎯⎯ Klasa B`
+    *Kuća se sastoji od Sobe. Soba ne može postojati bez kuće.*
+

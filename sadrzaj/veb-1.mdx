@@ -1,0 +1,104 @@
+# 1. Osnove Veb Razvoja i HTML
+
+Dobrodošli u svet veb razvoja! Svaki sajt koji posetite, od jednostavnih blogova do složenih aplikacija poput Facebook-a ili YouTube-a, izgrađen je na tri osnovna stuba: HTML, CSS i JavaScript.
+
+U ovoj prvoj lekciji, fokusiraćemo se na **HTML** – kostur svake veb stranice.
+
+## Šta je HTML?
+
+HTML (*HyperText Markup Language*) nije programski jezik u klasičnom smislu (nema logiku, petlje ili matematiku). To je **opisni jezik** (markup language) koji koristimo da bismo brauzeru (Chrome, Firefox, Safari) rekli kakva je struktura i sadržaj naše stranice.
+
+> 🏗️ **Analogija sa kućom:** Ako pravimo kuću, HTML bi bio temelj, zidovi i krov. CSS bi bila boja zidova i nameštaj, a JavaScript bi bile instalacije (struja i voda) koje omogućavaju da se nešto zapravo desi kada pritisnete prekidač.
+
+---
+
+## Osnovna struktura HTML dokumenta
+
+Svaki ispravan HTML dokument ima standardnu strukturu. Evo kako ona izgleda:
+
+```html
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>Moja prva stranica</title>
+</head>
+<body>
+    <h1>Dobrodošli na moj sajt!</h1>
+    <p>Ovo je moj prvi pasus teksta.</p>
+</body>
+</html>
+```
+
+### Analiza koda:
+* `<!DOCTYPE html>`: Govori brauzeru da koristimo najnoviju verziju HTML-a (HTML5).
+* `<html>`: Glavni kontejner (omot) u kom se nalazi sav ostali kod.
+* `<head>`: "Glava" dokumenta. Ovde idu "nevidljive" informacije o stranici, poput naslova u tabu brauzera (`<title>`) i meta podataka.
+* `<body>`: "Telo" dokumenta. **Sve** što želite da korisnik vidi na ekranu (tekst, slike, dugmad) mora ići unutar ovog taga.
+
+---
+
+## Najčešći HTML tagovi
+
+HTML koristi tagove (oznake) obavijene u uglaste zagrade `< >`. Većina tagova ima svoj "otvarajući" deo i "zatvarajući" deo koji ima kosu crtu `/`.
+
+### 1. Naslovi (Headings)
+Postoji 6 nivoa naslova. `<h1>` je najveći i najvažniji, dok je `<h6>` najmanji. Na svakoj stranici treba da imate samo jedan `<h1>`.
+
+```html
+<h1>Glavni naslov stranice</h1>
+<h2>Podnaslov sekcije</h2>
+<h3>Naslov trećeg nivoa</h3>
+```
+
+### 2. Pasusi i Tekst
+Za običan tekst koristimo `<p>` (paragraph) tag. Za podebljan tekst koristimo `<strong>`, a za iskošen `<em>`.
+
+```html
+<p>Ovo je jedan običan pasus. HTML ignoriše previše razmaka      i novih redova u kodu.</p>
+<p>Ovo je <strong>veoma važan</strong> i <em>iskošen</em> tekst.</p>
+```
+
+### 3. Liste
+Liste mogu biti neuređene (sa tačkicama) ili uređene (numerisane brojevima).
+
+```html
+<ul>
+    <li>Prva stavka</li>
+    <li>Druga stavka</li>
+</ul>
+
+<ol>
+    <li>Prvi korak</li>
+    <li>Drugi korak</li>
+</ol>
+```
+
+### 4. Linkovi i Slike
+Ovo su "prazni" tagovi ili tagovi sa posebnim atributima. Atributi daju dodatne informacije tagu (na primer, gde link vodi).
+
+```html
+<a href="[https://www.google.com](https://www.google.com)">Klikni ovde da odeš na Google</a>
+
+<img src="slika-macke.jpg" alt="Slatka mala mačka">
+```
+
+<Quiz pitanje="Koji HTML tag se koristi za najvažniji, glavni naslov na stranici?" opcije="<header>|<heading>|<h1>|<title>" tacanOdgovorIndex="2" />
+
+---
+
+## Kontejneri: `<div>` i `<span>`
+
+Kada počnemo da radimo sa CSS-om (u sledećoj lekciji), biće nam potrebno da grupišemo elemente kako bismo ih zajedno stilizovali. Za to koristimo "nevidljive" kontejnere.
+
+* `<div>`: Blok element. Zauzima celu širinu ekrana i prebacuje sadržaj u novi red (kao kutija).
+* `<span>`: Inline element. Koristi se za omotavanje sitnih delova teksta unutar pasusa, ne prelazi u novi red.
+
+```html
+<div class="kartica-korisnika">
+    <h2>Petar Petrović</h2>
+    <p>Zanimanje: <span class="plavi-tekst">Programer</span></p>
+</div>
+```
+
+Ovo su temelji. U sledećoj lekciji uzećemo ovaj sirovi, crno-beli HTML i udahnuti mu život i boje pomoću CSS-a!
