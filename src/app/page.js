@@ -32,13 +32,8 @@ export default function Home() {
         <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-[#EAE3D9] text-[#795548] text-sm font-bold tracking-wide uppercase shadow-sm">
           Platforma za učenje v2.0
         </div>
-        <h1 className="text-5xl md:text-6xl font-extrabold text-[#795548] mb-6 tracking-tight">
-          Majstorstvo kroz <span className="text-[#9F8170]">Praksu.</span>
-        </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          Zaboravi na suvu teoriju. Uči programiranje kroz interaktivne lekcije, 
-          realne primere koda i simulatore baza podataka direktno u tvom pregledaču.
-        </p>
+        
+        
       </div>
 
       {/* --- 2. STATISTIKA / METRIKA --- */}

@@ -10,25 +10,19 @@ import TableOfContents from '@/components/TableOfContents';
 import SqlEditor from '@/components/SqlEditor';
 import ZadatakZaVezbu from '@/components/ZadatakZaVezbu';
 import Pagination from '@/components/Pagination';
-import HtmlPreviewer from '@/components/HtmlPreviewer'; // Ovde uvozimo Previewer
+import HtmlPreviewer from '@/components/HtmlPreviewer';
 import Quiz from '@/components/Quiz';
-import { navItems } from '@/config/navigation';
 import CodePlayground from '@/components/CodePlayground';
 
+// UVOZIMO POMOĆNU FUNKCIJU ZA PAGINACIJU
+import { getAdjacentLessons } from '@/config/navigation';
+
 export default async function PredmetPage({ params }) {
+  // Await-ujemo params jer je to u novijim verzijama Next.js-a asinhrono
   const { slug } = await params; 
   
-  // Logika za Paginaciju
-  const currentPath = `/predmeti/${slug}`;
-  const currentIndex = navItems.findIndex(item => item.path === currentPath);
-  
-  let prevPage = null;
-  let nextPage = null;
-  
-  if (currentIndex !== -1) {
-    prevPage = currentIndex > 0 ? navItems[currentIndex - 1] : null;
-    nextPage = currentIndex < navItems.length - 1 ? navItems[currentIndex + 1] : null;
-  }
+  // LOGIKA ZA PAGINACIJU (Sada koristi našu helper funkciju)
+  const { prev, next } = getAdjacentLessons(slug);
 
   // Čitanje MDX-a
   const filePath = path.join(process.cwd(), 'sadrzaj', `${slug}.mdx`);
@@ -59,7 +53,7 @@ export default async function PredmetPage({ params }) {
                             prose-headings:text-[#795548] dark:prose-headings:text-[#D2C4B3]
                             prose-a:text-[#9F8170] hover:prose-a:text-[#795548] dark:hover:prose-a:text-white
                             prose-h2:scroll-mt-24 prose-h3:scroll-mt-24">
-          {/* 3. PROSLEĐUJEMO MAPU U MOTOR (Ovo je rešilo tvoju grešku!) */}
+          {/* 3. PROSLEĐUJEMO MAPU U MOTOR */}
           <MDXRemote 
             source={fileContent} 
             options={mdxOptions} 
@@ -67,7 +61,8 @@ export default async function PredmetPage({ params }) {
           />
         </article>
 
-        <Pagination prev={prevPage} next={nextPage} />
+        {/* 4. PAGINACIJA DOBIJA TAČNE PODATKE */}
+        <Pagination prev={prev} next={next} />
       </div>
 
       <TableOfContents />

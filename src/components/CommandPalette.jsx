@@ -11,7 +11,6 @@ export default function CommandPalette() {
   const inputRef = useRef(null);
   const router = useRouter();
 
-  // 1. Slušamo Ctrl+K, Escape, ALI I NAŠ CUSTOM EVENT ZA MOBILNI
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -21,27 +20,26 @@ export default function CommandPalette() {
       if (e.key === 'Escape') setIsOpen(false);
     };
 
-    // Ovo je tajni signal koji sluša dugme iz menija
     const handleOpenSearch = () => setIsOpen(true);
 
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('openSearch', handleOpenSearch); // Slušamo mobilni
+    window.addEventListener('otvori-pretragu', handleOpenSearch);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('openSearch', handleOpenSearch);
+      window.removeEventListener('otvori-pretragu', handleOpenSearch);
     };
   }, []);
 
-  // 2. Fokusiranje inputa i čišćenje linter grešaka
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 50);
     } else {
-      // Čistimo pretragu tek kada se prozor zatvori (rešava ESLint grešku)
       setTimeout(() => setQuery(''), 200);
     }
   }, [isOpen]);
+
+  const stopPropagation = (e) => e.stopPropagation();
 
   const filteredResults = query === '' 
     ? [] 
@@ -58,12 +56,13 @@ export default function CommandPalette() {
   if (!isOpen) return null;
 
   return (
-    // Popravljen z-index po ESLint preporuci (z-100 umesto z-[100])
-    <div className="fixed inset-0 z-100 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-[10vh] px-4 animate-fadeIn">
-      
+    <div 
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-[10vh] px-4 animate-fadeIn"
+      onClick={() => setIsOpen(false)}
+    >
       <div 
         className="w-full max-w-2xl bg-[#FDFBF8] dark:bg-[#1E1E1E] rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col"
-        onClick={(e) => e.stopPropagation()}
+        onClick={stopPropagation}
       >
         <div className="flex items-center px-4 border-b border-gray-200 dark:border-gray-800">
           <svg className="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,14 +76,16 @@ export default function CommandPalette() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button onClick={() => setIsOpen(false)} className="text-xs font-bold bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-300 px-2 py-1 rounded">
+          <button 
+            onClick={() => setIsOpen(false)} 
+            className="text-xs font-bold bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-300 px-2 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >
             ESC
           </button>
         </div>
 
         <div className="max-h-[60vh] overflow-y-auto p-2">
           {query === '' ? (
-            // Popravljeni navodnici koristeći &quot; za ESLint
             <div className="p-8 text-center text-gray-500 text-sm">
               Ukucaj pojam za pretragu (npr. &quot;Java&quot;, &quot;SQL&quot;).
             </div>
@@ -95,7 +96,7 @@ export default function CommandPalette() {
           ) : (
             <ul className="space-y-1">
               {filteredResults.map((result) => (
-                <li key={result.id}>
+                <li key={result.id || result.path}>
                   <button
                     onClick={() => handleSelect(result.path)}
                     className="w-full flex flex-col text-left px-4 py-3 hover:bg-[#EAE3D9] dark:hover:bg-[#2C2C2C] rounded-xl transition-colors group"
@@ -103,6 +104,7 @@ export default function CommandPalette() {
                     <span className="text-xs font-bold text-[#9F8170] uppercase mb-1 tracking-wider">
                       {result.category}
                     </span>
+                    {/* Ovde je bila greška u originalnom kodu, sada je ispravljeno */}
                     <span className="text-[#795548] dark:text-gray-200 font-medium group-hover:text-[#795548] dark:group-hover:text-white">
                       {result.title}
                     </span>

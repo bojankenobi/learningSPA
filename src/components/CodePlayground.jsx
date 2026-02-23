@@ -1,20 +1,32 @@
+// src/components/CodePlayground.jsx
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 
 export default function CodePlayground({ 
   mode = 'web', // 'web' za HTML/CSS/JS, ili 'console' za samo JS
-  defaultHtml = '<h1>Pozdrav svete!</h1>\n<p>Ovo je moj prvi kod.</p>', 
-  defaultCss = 'h1 { color: #795548; }', 
-  defaultJs = 'console.log("Sistem spreman!");' 
+  initialHtml = '<h1>Pozdrav svete!</h1>\n<p>Ovo je moj prvi kod.</p>', 
+  initialCss = 'h1 { color: #795548; }', 
+  initialJs = 'console.log("Sistem spreman!");' 
 }) {
-  const [html, setHtml] = useState(defaultHtml);
-  const [css, setCss] = useState(defaultCss);
-  const [js, setJs] = useState(defaultJs);
+  const [html, setHtml] = useState(initialHtml);
+  const [css, setCss] = useState(initialCss);
+  const [js, setJs] = useState(initialJs);
   const [srcDoc, setSrcDoc] = useState('');
   const [logs, setLogs] = useState([]);
   
   const iframeRef = useRef(null);
+
+  // KLJUČNA IZMENA: Kada stigne novi zadatak (promene se props-i), resetuj editor!
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setHtml(initialHtml);
+      setCss(initialCss);
+      setJs(initialJs);
+    }, 0);
+    
+    return () => clearTimeout(timer);
+  }, [initialHtml, initialCss, initialJs]);
 
   // Generisanje koda koji se ubacuje u Iframe
   useEffect(() => {
@@ -85,17 +97,18 @@ export default function CodePlayground({
   }, []);
 
   return (
-    <div className="flex flex-col border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden my-8 shadow-sm">
+    // Uklonjen my-8 da bi u vežbaonici komponenta zauzela celu raspoloživu visinu
+    <div className="flex flex-col border border-gray-300 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm h-full">
       
-      {/* GORNJI DEO: Editori */}
-      <div className={`grid ${mode === 'web' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'} bg-[#1E1E1E] border-b border-gray-700`}>
+      {/* GORNJI DEO: Editori (sada zauzimaju više prostora po vertikali) */}
+      <div className={`grid ${mode === 'web' ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1'} bg-[#1E1E1E] border-b border-gray-700 h-1/2`}>
         
-        {/* HTML Editor (Samo u web modu) */}
+        {/* HTML Editor */}
         {mode === 'web' && (
-          <div className="flex flex-col border-b md:border-b-0 md:border-r border-gray-700">
-            <div className="bg-[#2D2D2D] text-gray-300 text-xs font-bold px-3 py-1.5 uppercase tracking-wider">HTML</div>
+          <div className="flex flex-col border-b md:border-b-0 md:border-r border-gray-700 h-full">
+            <div className="bg-[#2D2D2D] text-gray-300 text-xs font-bold px-3 py-1.5 uppercase tracking-wider shrink-0">HTML</div>
             <textarea
-              className="w-full h-40 p-3 bg-[#1E1E1E] text-[#D4D4D4] font-mono text-sm resize-none focus:outline-none focus:ring-1 focus:ring-[#9F8170]"
+              className="w-full h-full p-3 bg-[#1E1E1E] text-[#D4D4D4] font-mono text-sm resize-none focus:outline-none focus:ring-1 focus:ring-[#9F8170]"
               value={html}
               onChange={(e) => setHtml(e.target.value)}
               spellCheck="false"
@@ -103,12 +116,12 @@ export default function CodePlayground({
           </div>
         )}
 
-        {/* CSS Editor (Samo u web modu) */}
+        {/* CSS Editor */}
         {mode === 'web' && (
-          <div className="flex flex-col border-b md:border-b-0 md:border-r border-gray-700">
-            <div className="bg-[#2D2D2D] text-gray-300 text-xs font-bold px-3 py-1.5 uppercase tracking-wider">CSS</div>
+          <div className="flex flex-col border-b md:border-b-0 md:border-r border-gray-700 h-full">
+            <div className="bg-[#2D2D2D] text-gray-300 text-xs font-bold px-3 py-1.5 uppercase tracking-wider shrink-0">CSS</div>
             <textarea
-              className="w-full h-40 p-3 bg-[#1E1E1E] text-[#D4D4D4] font-mono text-sm resize-none focus:outline-none focus:ring-1 focus:ring-[#9F8170]"
+              className="w-full h-full p-3 bg-[#1E1E1E] text-[#D4D4D4] font-mono text-sm resize-none focus:outline-none focus:ring-1 focus:ring-[#9F8170]"
               value={css}
               onChange={(e) => setCss(e.target.value)}
               spellCheck="false"
@@ -116,11 +129,11 @@ export default function CodePlayground({
           </div>
         )}
 
-        {/* JS Editor (Uvek prisutan) */}
-        <div className="flex flex-col">
-          <div className="bg-[#2D2D2D] text-gray-300 text-xs font-bold px-3 py-1.5 uppercase tracking-wider">JavaScript</div>
+        {/* JS Editor */}
+        <div className="flex flex-col h-full">
+          <div className="bg-[#2D2D2D] text-gray-300 text-xs font-bold px-3 py-1.5 uppercase tracking-wider shrink-0">JavaScript</div>
           <textarea
-            className={`w-full ${mode === 'console' ? 'h-48' : 'h-40'} p-3 bg-[#1E1E1E] text-[#DCDCAA] font-mono text-sm resize-none focus:outline-none focus:ring-1 focus:ring-[#9F8170]`}
+            className={`w-full h-full p-3 bg-[#1E1E1E] text-[#DCDCAA] font-mono text-sm resize-none focus:outline-none focus:ring-1 focus:ring-[#9F8170]`}
             value={js}
             onChange={(e) => setJs(e.target.value)}
             spellCheck="false"
@@ -128,25 +141,25 @@ export default function CodePlayground({
         </div>
       </div>
 
-      {/* DONJI DEO: Rezultat ili Konzola */}
-      <div className="bg-white dark:bg-black relative">
-        <div className="absolute top-0 right-0 bg-gray-200 dark:bg-gray-800 text-gray-500 text-[10px] font-bold px-2 py-1 uppercase rounded-bl-lg z-10">
+      {/* DONJI DEO: Rezultat ili Konzola (zauzima ostatak prostora) */}
+      <div className="bg-white dark:bg-black relative h-1/2 flex flex-col">
+        <div className="absolute top-0 right-0 bg-gray-200 dark:bg-gray-800 text-gray-500 text-[10px] font-bold px-2 py-1 uppercase rounded-bl-lg z-10 shrink-0">
           {mode === 'web' ? 'Prikaz (Live Preview)' : 'Konzola (Console)'}
         </div>
 
         {mode === 'web' ? (
-          // WEB PREVIEW: Renderuje iframe sa kodom
+          // WEB PREVIEW: Iframe sada zauzima celu visinu kontejnera
           <iframe
             ref={iframeRef}
             srcDoc={srcDoc}
             title="output"
             sandbox="allow-scripts"
-            className="w-full h-64 bg-white"
+            className="w-full flex-1 bg-white"
             frameBorder="0"
           />
         ) : (
           // CONSOLE PREVIEW: Crni prozor za logove
-          <div className="w-full h-64 bg-[#0C0C0C] text-[#CCCCCC] font-mono text-sm p-4 overflow-y-auto">
+          <div className="w-full flex-1 bg-[#0C0C0C] text-[#CCCCCC] font-mono text-sm p-4 overflow-y-auto">
             {/* Skriveni iframe koji samo izvršava JS i šalje poruke */}
             <iframe ref={iframeRef} srcDoc={srcDoc} className="hidden" sandbox="allow-scripts" />
             
