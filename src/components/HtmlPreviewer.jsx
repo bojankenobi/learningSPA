@@ -23,7 +23,7 @@ export default function HtmlPreviewer({ pocetniKod }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         
         {/* --- LEVA STRANA: Editor Koda --- */}
-        <div className="flex flex-col h-[350px] shadow-sm rounded-xl overflow-hidden border border-gray-700">
+        <div className="flex flex-col h-87.5 shadow-sm rounded-xl overflow-hidden border border-gray-700">
           <div className="bg-[#2D2D2D] px-4 py-2 flex justify-between items-center border-b border-gray-900">
             <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">index.html (Editor)</span>
             <div className="flex space-x-2">
@@ -42,7 +42,7 @@ export default function HtmlPreviewer({ pocetniKod }) {
         </div>
 
         {/* --- DESNA STRANA: Prikaz Uživo --- */}
-        <div className="flex flex-col h-[350px] shadow-sm rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white">
+        <div className="flex flex-col h-87.5 shadow-sm rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white">
           <div className="bg-[#EAE3D9] dark:bg-[#2C2C2C] px-4 py-2 flex items-center">
             <span className="text-xs font-bold text-[#795548] dark:text-[#D2C4B3] uppercase tracking-wider">Rezultat Uživo</span>
           </div>

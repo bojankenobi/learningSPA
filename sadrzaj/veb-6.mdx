@@ -45,26 +45,6 @@ forma.addEventListener("submit", function(e) {
 });
 ```
 
-### Vežba: Validacija forme uživo
-Pokušaj da pošalješ prazno polje i prati poruku u konzoli ispod editora!
-
-<CodePlayground 
-  mode="console"
-  defaultJs={`function proveriUnos(tekst) {
-    if (tekst === "") {
-        console.error("GREŠKA: Polje ne sme biti prazno!");
-    } else if (tekst.length < 5) {
-        console.log("UPOZORENJE: Unos je prekratak.");
-    } else {
-        console.log("USPEH: Podaci spremni za slanje: " + tekst);
-    }
-}
-
-// Simulacija unosa
-proveriUnos("");
-proveriUnos("Abc");
-proveriUnos("Marko Markovic");`}
-/>
 
 ---
 
@@ -151,88 +131,6 @@ Stigli ste do kraja! Posedujete sve veštine potrebne da izgradite modernu, inte
 
 ---
 
-# Zadaci za Vežbu (Modul 4)
-
-Ovo su pravi, inženjerski izazovi. Razmislite o logici pre nego što pogledate rešenje.
-
-### Zadatak 1: Validacija lozinke
-Imate input polje za lozinku i dugme. Napišite funkciju koja se okida na klik dugmeta, uzima vrednost iz polja, i proverava:
-1. Da li je lozinka duža od 8 karaktera?
-2. Da li sadrži reč "password" (ako sadrži, odbiti je).
-
-<ZadatakZaVezbu 
-  naslov="Rešenje: Validacija lozinke"
-  kod={`let inputLozinka = document.getElementById("lozinka-polje");
-let dugme = document.getElementById("proveri-btn");
-
-dugme.addEventListener("click", function() {
-    let unetaLozinka = inputLozinka.value;
-
-    // Proveravamo dužinu
-    if (unetaLozinka.length < 8) {
-        console.log("Lozinka mora imati barem 8 karaktera.");
-    } 
-    // Proveravamo da li sadrži zabranjenu reč (koristimo metodu includes)
-    else if (unetaLozinka.includes("password")) {
-        console.log("Lozinka ne sme sadržati reč 'password'.");
-    } 
-    else {
-        console.log("Lozinka je bezbedna!");
-    }
-});`}
-  analiza="Metoda stringa .includes() je izuzetno korisna za ovakve provere. U realnom sistemu, dodali bismo i Regex da proverimo da li korisnik ima veliko slovo i broj."
-/>
-
-### Zadatak 2: Čuvanje teme u LocalStorage
-Napravite logiku koja na klik dugmeta menja temu sajta (dark/light), ali je usput čuva u `localStorage` pod ključem `odabranaTema`. 
-
-<ZadatakZaVezbu 
-  naslov="Rešenje: Čuvanje u LocalStorage"
-  kod={`let dugmeTema = document.getElementById("tema-dugme");
-
-dugmeTema.addEventListener("click", function() {
-    // 1. Menjamo klasu na body elementu
-    document.body.classList.toggle("dark-mode");
-
-    // 2. Proveravamo da li je klasa sada prisutna
-    let daLiJeTamna = document.body.classList.contains("dark-mode");
-
-    // 3. Čuvamo taj podatak u LocalStorage (čuvamo običan tekst "da" ili "ne")
-    if (daLiJeTamna) {
-        localStorage.setItem("odabranaTema", "da");
-    } else {
-        localStorage.setItem("odabranaTema", "ne");
-    }
-});
-
-// Prijateljski savet: Kada se sajt tek učitava, treba pročitati 
-// ovaj 'item' iz localStorage i dodati klasu ako piše "da"!`}
-  analiza="Ovo je školski primer kako se prave profesionalni sajtovi. Nije dovoljno samo promeniti boju, sajt mora da 'zapamti' korisnikov izbor za sledeći put kada poseti stranicu."
-/>
-
-### Zadatak 3: Preuzimanje jednog korisnika (Fetch API)
-Napišite asinhronu funkciju koja koristi `fetch` da pogodi sledeći URL: `https://jsonplaceholder.typicode.com/users/1`. (Ovo je javni test server). Kada stignu podaci o tom jednom korisniku, ispišite u konzolu njegov `email`.
-
-<ZadatakZaVezbu 
-  naslov="Rešenje: Fetch API"
-  kod={`async function dobaviEmail() {
-    try {
-        let odgovor = await fetch("https://jsonplaceholder.typicode.com/users/1");
-        
-        // Pretvaramo odgovor u JS objekat
-        let korisnik = await odgovor.json();
-        
-        // jsonplaceholder API vraća objekat koji ima svojstvo 'email'
-        console.log(\`Korisnikov email je: \${korisnik.email}\`);
-
-    } catch (greska) {
-        console.error("Greška pri komunikaciji sa serverom:", greska);
-    }
-}
-
-dobaviEmail();`}
-  analiza="Uvek koristite 'try/catch' blokove kada radite sa fetch komandom. Internet konekcija može da pukne svakog trenutka, a bez 'catch' bloka, vaš ceo JavaScript program bi pao i zaustavio se."
-/>
 
 # Praktični JS Projekti i Izazovi
 

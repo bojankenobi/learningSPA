@@ -62,7 +62,7 @@ export default function Home() {
           
           {/* Kartica 1: OOP (Sa grupnim progresom) */}
           <Link href="/predmeti/oop-1" className="group flex flex-col bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-xl hover:border-[#D2C4B3] hover:-translate-y-2 transition-all duration-300 overflow-hidden">
-            <div className="h-32 bg-gradient-to-br from-[#EAE3D9] to-[#D2C4B3] flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+            <div className="h-32 bg-linear-to-br from-[#EAE3D9] to-[#D2C4B3] flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
               <svg className="w-16 h-16 text-[#795548] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
@@ -99,7 +99,7 @@ export default function Home() {
 
           {/* Kartica 2: Baze Podataka */}
           <Link href="/predmeti/baze-podataka" className="group flex flex-col bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-xl hover:border-[#D2C4B3] hover:-translate-y-2 transition-all duration-300 overflow-hidden">
-            <div className="h-32 bg-gradient-to-br from-[#EAE3D9] to-[#D2C4B3] flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+            <div className="h-32 bg-linear-to-br from-[#EAE3D9] to-[#D2C4B3] flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
               <svg className="w-16 h-16 text-[#795548] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4M4 7v10M12 21v-8M20 7v10" />
               </svg>
@@ -136,7 +136,7 @@ export default function Home() {
 
           {/* Kartica 3: Veb Razvoj */}
           <Link href="/predmeti/veb-razvoj" className="group flex flex-col bg-white dark:bg-[#1E1E1E] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-xl hover:border-[#D2C4B3] hover:-translate-y-2 transition-all duration-300 overflow-hidden">
-            <div className="h-32 bg-gradient-to-br from-[#EAE3D9] to-[#D2C4B3] flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+            <div className="h-32 bg-linear-to-br from-[#EAE3D9] to-[#D2C4B3] flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
               <svg className="w-16 h-16 text-[#795548] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17.25l4.5-4.5-4.5-4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
